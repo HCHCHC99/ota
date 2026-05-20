@@ -1,0 +1,28 @@
+# Build outputs
+Objects/
+Listings/
+*.axf
+*.bin
+*.hex
+*.o
+*.lst
+*.map
+*.build_log.htm
+*.lnp
+*.sct
+
+# Keil IDE user settings (local only)
+*.uvguix.*
+*.uvgui.*
+JLinkLog.txt
+JLinkSettings.ini
+
+# OTA test data (debug logs)
+ota data*.txt
+
+# Python cache
+__pycache__/
+*.pyc
+
+# VS Code
+.vscode/
