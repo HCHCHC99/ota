@@ -1,18 +1,18 @@
-/********************************ÎÄ¼þËµÃ÷*************************************
-*ÎÄ¼þÃû: isotp_transport.h
-*×÷Õß: AI Assistant
-*°æ±¾: V1.0.0
-*¹¦ÄÜ¼ò½é: ISO 15765-2 ´«Êä²ãÐ­ÒéÊµÏÖ
-*±¸×¢: Ö§³Ö³¤±¨ÎÄµÄ·Ö°ü·¢ËÍºÍ½ÓÊÕ
+/********************************ï¿½Ä¼ï¿½Ëµï¿½ï¿½*************************************
+*ï¿½Ä¼ï¿½ï¿½ï¿½: isotp_transport.h
+*ï¿½ï¿½ï¿½ï¿½: AI Assistant
+*ï¿½æ±¾: V1.0.0
+*ï¿½ï¿½ï¿½Ü¼ï¿½ï¿½: ISO 15765-2 ï¿½ï¿½ï¿½ï¿½ï¿½Ð­ï¿½ï¿½Êµï¿½ï¿½
+*ï¿½ï¿½×¢: Ö§ï¿½Ö³ï¿½ï¿½ï¿½ï¿½ÄµÄ·Ö°ï¿½ï¿½ï¿½ï¿½ÍºÍ½ï¿½ï¿½ï¿½
 *****************************************************************************/
 #ifndef ISOTP_TRANSPORT_H_
 #define ISOTP_TRANSPORT_H_
 
-/*****************************ÎÄ¼þ°üº¬(¹«¿ª)*********************************/
+/*****************************ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½)*********************************/
 #include "stdint.h"
 #include "stdbool.h"
 
-/*****************************µ÷ÊÔºê¶¨Òå***************************************/
+/*****************************ï¿½ï¿½ï¿½Ôºê¶¨ï¿½ï¿½***************************************/
 // #define ISO_DEBUG
 #ifdef ISO_DEBUG
     #define ISOTP_D(fmt, ...)  LOG_CH(LOG_CH_MAIN, LOG_LEVEL_DEBUG, COLOR_CYAN,   "ISOTP", fmt, ##__VA_ARGS__)
@@ -26,7 +26,7 @@
     #define ISOTP_E(fmt, ...)  (void)0
 #endif
 
-/* OTA µ÷ÊÔ´òÓ¡£¨´òÓ¡¹Ø×¢µÄ CAN ID Ö¡£¬´øÐòºÅ£© */
+/* OTA ï¿½ï¿½ï¿½Ô´ï¿½Ó¡ï¿½ï¿½ï¿½ï¿½Ó¡ï¿½ï¿½×¢ï¿½ï¿½ CAN ID Ö¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å£ï¿½ */
 #define OTA_DEBUG
 #ifdef OTA_DEBUG
     #define OTA_D(fmt, ...)  LOG_CH(LOG_CH_MAIN, LOG_LEVEL_DEBUG, COLOR_CYAN,   "OTA", fmt, ##__VA_ARGS__)
@@ -40,158 +40,159 @@
     #define OTA_E(fmt, ...)  (void)0
 #endif
 
-/***************************** CAN ID ¹ýÂË¼ÇÂ¼ÅäÖÃ ****************************/
-/* ÊÇ·ñÆôÓÃ CAN ID ¹ýÂË¼ÇÂ¼¹¦ÄÜ
- * 0: ½ûÓÃ
- * 1: ÆôÓÃ
+/***************************** CAN ID ï¿½ï¿½ï¿½Ë¼ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ ****************************/
+/* ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ CAN ID ï¿½ï¿½ï¿½Ë¼ï¿½Â¼ï¿½ï¿½ï¿½ï¿½
+ * 0: ï¿½ï¿½ï¿½ï¿½
+ * 1: ï¿½ï¿½ï¿½ï¿½
  */
 #define ISOTP_ENABLE_FILTER_RECORD    1
 
 
-/* ×Ô¶¯Á÷¿ØÖ¡»Ø¸´£¨ÓÃÓÚÌØ¶¨³¡¾°£© */
-#define ISOTP_AUTO_FC
+/* ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½Ö¡ï¿½Ø¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+// #define ISOTP_AUTO_FC  /* Disabled: use normal ISO-TP path */
 
-/* ¹Ø×¢µÄ CAN ID ÁÐ±í£¨¿ÉÈÎÒâÔö¼Ó£© */
+/* ï¿½ï¿½×¢ï¿½ï¿½ CAN ID ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó£ï¿½ */
 #define ISOTP_FILTER_CAN_ID_COUNT     3
 #define ISOTP_FILTER_CAN_ID_LIST      {0x18DA03F1, 0x18DAF103, 0x18FF8118}
 
-/* ¹ýÂË¼ÇÂ¼»º³åÇø´óÐ¡£¨»·ÐÎ»º³åÇø£©*/
+/* ï¿½ï¿½ï¿½Ë¼ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 #define ISOTP_FILTER_BUFFER_SIZE      64
 
-/******************************ºê¶¨Òå(¹«¿ª)***********************************/
+/******************************ï¿½ê¶¨ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½)***********************************/
 
-/* ISO-TP Ö¡ÀàÐÍ±êÊ¶ */
-#define ISOTP_FRAME_SINGLE           0x00    /* µ¥Ö¡ (SF) */
-#define ISOTP_FRAME_FIRST            0x10    /* Ê×Ö¡ (FF) */
-#define ISOTP_FRAME_CONSECUTIVE      0x20    /* Á¬ÐøÖ¡ (CF) */
-#define ISOTP_FRAME_FLOW_CONTROL     0x30    /* Á÷¿ØÖ¡ (FC) */
+/* ISO-TP Ö¡ï¿½ï¿½ï¿½Í±ï¿½Ê¶ */
+#define ISOTP_FRAME_SINGLE           0x00    /* ï¿½ï¿½Ö¡ (SF) */
+#define ISOTP_FRAME_FIRST            0x10    /* ï¿½ï¿½Ö¡ (FF) */
+#define ISOTP_FRAME_CONSECUTIVE      0x20    /* ï¿½ï¿½ï¿½ï¿½Ö¡ (CF) */
+#define ISOTP_FRAME_FLOW_CONTROL     0x30    /* ï¿½ï¿½ï¿½ï¿½Ö¡ (FC) */
 
-/* Á÷¿Ø×´Ì¬ (Flow Status) */
-#define ISOTP_FC_CTS                 0x00    /* Continue to Send, ¼ÌÐø·¢ËÍ */
-#define ISOTP_FC_WAIT                0x01    /* Wait, µÈ´ý */
-#define ISOTP_FC_OVERFLOW            0x02    /* Overflow, Òç³ö */
+/* ï¿½ï¿½ï¿½ï¿½×´Ì¬ (Flow Status) */
+#define ISOTP_FC_CTS                 0x00    /* Continue to Send, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+#define ISOTP_FC_WAIT                0x01    /* Wait, ï¿½È´ï¿½ */
+#define ISOTP_FC_OVERFLOW            0x02    /* Overflow, ï¿½ï¿½ï¿½ */
 
-/* ·µ»ØÖµ */
-#define ISOTP_OK                     0       /* ³É¹¦ */
-#define ISOTP_BUSY                   1       /* Ã¦£¨½ÓÊÕÖÐ£© */
-#define ISOTP_ERROR                 -1       /* ´íÎó */
-#define ISOTP_TIMEOUT               -2       /* ³¬Ê± */
-#define ISOTP_INCOMPLETE            -3       /* ²»ÍêÕû£¨µÈ´ý¸ü¶àÊý¾Ý£© */
+/* ï¿½ï¿½ï¿½ï¿½Öµ */
+#define ISOTP_OK                     0       /* ï¿½É¹ï¿½ */
+#define ISOTP_BUSY                   1       /* Ã¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½ */
+#define ISOTP_ERROR                 -1       /* ï¿½ï¿½ï¿½ï¿½ */
+#define ISOTP_TIMEOUT               -2       /* ï¿½ï¿½Ê± */
+#define ISOTP_INCOMPLETE            -3       /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½ */
 
-/* ÅäÖÃ²ÎÊý */
-#define ISOTP_BUFFER_SIZE            8192    /* ½ÓÊÕ»º³åÇø´óÐ¡ (8KB) */
-#define ISOTP_RX_TIMEOUT_MS          65535   /* ½ÓÊÕ³¬Ê±Ê±¼ä (ms) */
+/* ï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½ */
+#define ISOTP_BUFFER_SIZE            8192    /* Receive buffer (8KB) */
+#define ISOTP_DEFAULT_RESPONSE_ID   0x18DAF103
+#define ISOTP_RX_TIMEOUT_MS          65535   /* ï¿½ï¿½ï¿½Õ³ï¿½Ê±Ê±ï¿½ï¿½ (ms) */
 
-/* Á÷¿Ø²ÎÊý (±£ÊØÄ£Ê½) */
-#define ISOTP_DEFAULT_BLOCK_SIZE     5       /* BS = 5, Ã¿5Ö¡·¢Ò»´ÎÁ÷¿Ø */
+/* ï¿½ï¿½ï¿½Ø²ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½Ä£Ê½) */
+#define ISOTP_DEFAULT_BLOCK_SIZE     0       /* BS = 0 (send all at once) */
 #define ISOTP_DEFAULT_ST_MIN_MS      5       /* STmin = 5ms */
 
-/* ×î´óÖ§³ÖµÄÏûÏ¢³¤¶È */
-#define ISOTP_MAX_MESSAGE_LEN        (4095)  /* ISO-TP Ê×Ö¡×î´óÖ§³Ö 4095 ×Ö½Ú */
+/* ï¿½ï¿½ï¿½Ö§ï¿½Öµï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ */
+#define ISOTP_MAX_MESSAGE_LEN        (4095)  /* ISO-TP ï¿½ï¿½Ö¡ï¿½ï¿½ï¿½Ö§ï¿½ï¿½ 4095 ï¿½Ö½ï¿½ */
 
-/**************************Êý¾ÝÀàÐÍ¼°½á¹¹¶¨Òå(¹«¿ª)***************************/
+/**************************ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½á¹¹ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½)***************************/
 
-/* ISO-TP ½ÓÊÕ×´Ì¬»ú */
+/* ISO-TP ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½ */
 typedef enum
 {
-    ISOTP_RX_IDLE = 0,          /* ¿ÕÏÐ£¬µÈ´ýÊ×Ö¡ */
-    ISOTP_RX_ACTIVE,            /* ½ÓÊÕÖÐ£¬ÕýÔÚ½ÓÊÕÁ¬ÐøÖ¡ */
-    ISOTP_RX_WAIT_FC,           /* ·¢ËÍÄ£Ê½£ºµÈ´ýÁ÷¿ØÖ¡ */
-    ISOTP_RX_COMPLETE,          /* ½ÓÊÕÍê³É */
-    ISOTP_RX_TIMEOUT            /* ½ÓÊÕ³¬Ê± */
+    ISOTP_RX_IDLE = 0,          /* ï¿½ï¿½ï¿½Ð£ï¿½ï¿½È´ï¿½ï¿½ï¿½Ö¡ */
+    ISOTP_RX_ACTIVE,            /* ï¿½ï¿½ï¿½ï¿½ï¿½Ð£ï¿½ï¿½ï¿½ï¿½Ú½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¡ */
+    ISOTP_RX_WAIT_FC,           /* ï¿½ï¿½ï¿½ï¿½Ä£Ê½ï¿½ï¿½ï¿½È´ï¿½ï¿½ï¿½ï¿½ï¿½Ö¡ */
+    ISOTP_RX_COMPLETE,          /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    ISOTP_RX_TIMEOUT            /* ï¿½ï¿½ï¿½Õ³ï¿½Ê± */
 } isotp_rx_state_t;
 
-/* ISO-TP ·¢ËÍ×´Ì¬»ú */
+/* ISO-TP ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½ */
 typedef enum
 {
-    ISOTP_TX_IDLE = 0,          /* ¿ÕÏÐ */
-    ISOTP_TX_SENDING_FF,        /* ÒÑ·¢ËÍÊ×Ö¡£¬µÈ´ýÁ÷¿Ø»ò·¢ËÍÁ¬ÐøÖ¡ */
-    ISOTP_TX_SENDING_CF,        /* ·¢ËÍÁ¬ÐøÖ¡ÖÐ */
-    ISOTP_TX_COMPLETE,          /* ·¢ËÍÍê³É */
-    ISOTP_TX_TIMEOUT            /* ·¢ËÍ³¬Ê± */
+    ISOTP_TX_IDLE = 0,          /* ï¿½ï¿½ï¿½ï¿½ */
+    ISOTP_TX_SENDING_FF,        /* ï¿½Ñ·ï¿½ï¿½ï¿½ï¿½ï¿½Ö¡ï¿½ï¿½ï¿½È´ï¿½ï¿½ï¿½ï¿½Ø»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¡ */
+    ISOTP_TX_SENDING_CF,        /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¡ï¿½ï¿½ */
+    ISOTP_TX_COMPLETE,          /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    ISOTP_TX_TIMEOUT            /* ï¿½ï¿½ï¿½Í³ï¿½Ê± */
 } isotp_tx_state_t;
 
-/* ISO-TP Á¬½Ó½á¹¹Ìå (µ¥Á¬½Ó£¬²»Ö§³Ö²¢·¢) */
+/* ISO-TP ï¿½ï¿½ï¿½Ó½á¹¹ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½Ó£ï¿½ï¿½ï¿½Ö§ï¿½Ö²ï¿½ï¿½ï¿½) */
 typedef struct
 {
-    /* ½ÓÊÕÏà¹Ø */
-    isotp_rx_state_t rx_state;          /* ½ÓÊÕ×´Ì¬ */
-    uint32_t rx_src_id;                 /* ½ÓÊÕÔ´ CAN ID (ÇëÇó·½) */
-    uint32_t rx_dst_id;                 /* ½ÓÊÕÄ¿±ê CAN ID (ÏìÓ¦·½) */
-    uint8_t* rx_buffer;                 /* ½ÓÊÕ»º³åÇøÖ¸Õë */
-    uint16_t rx_total_len;              /* ÏûÏ¢×Ü³¤¶È */
-    uint16_t rx_received_len;           /* ÒÑ½ÓÊÕ³¤¶È */
-    uint8_t rx_expected_seq;            /* ÆÚÍûµÄÏÂÒ»¸öÁ¬ÐøÖ¡ÐòºÅ (1-15) */
-    uint8_t rx_cf_count_in_block;       /* µ±Ç°¿éÄÚÒÑ½ÓÊÕµÄÁ¬ÐøÖ¡Êý */
-    uint16_t rx_timeout_counter;        /* ½ÓÊÕ³¬Ê±¼ÆÊýÆ÷ (ms) */
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    isotp_rx_state_t rx_state;          /* ï¿½ï¿½ï¿½ï¿½×´Ì¬ */
+    uint32_t rx_src_id;                 /* ï¿½ï¿½ï¿½ï¿½Ô´ CAN ID (ï¿½ï¿½ï¿½ï¿½) */
+    uint32_t rx_dst_id;                 /* ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ CAN ID (ï¿½ï¿½Ó¦ï¿½ï¿½) */
+    uint8_t* rx_buffer;                 /* ï¿½ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ */
+    uint16_t rx_total_len;              /* ï¿½ï¿½Ï¢ï¿½Ü³ï¿½ï¿½ï¿½ */
+    uint16_t rx_received_len;           /* ï¿½Ñ½ï¿½ï¿½Õ³ï¿½ï¿½ï¿½ */
+    uint8_t rx_expected_seq;            /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¡ï¿½ï¿½ï¿½ (1-15) */
+    uint8_t rx_cf_count_in_block;       /* ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½Ñ½ï¿½ï¿½Õµï¿½ï¿½ï¿½ï¿½ï¿½Ö¡ï¿½ï¿½ */
+    uint16_t rx_timeout_counter;        /* ï¿½ï¿½ï¿½Õ³ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (ms) */
     
-    /* ·¢ËÍÏà¹Ø */
-    isotp_tx_state_t tx_state;          /* ·¢ËÍ×´Ì¬ */
-    uint32_t tx_dst_id;                 /* ·¢ËÍÄ¿±ê CAN ID */
-    uint8_t* tx_buffer;                 /* ·¢ËÍ»º³åÇøÖ¸Õë */
-    uint16_t tx_total_len;              /* ·¢ËÍÏûÏ¢×Ü³¤¶È */
-    uint16_t tx_sent_len;               /* ÒÑ·¢ËÍ³¤¶È */
-    uint8_t tx_seq;                     /* ÏÂÒ»¸öÁ¬ÐøÖ¡ÐòºÅ */
-    uint8_t tx_cf_count_in_block;       /* µ±Ç°¿éÄÚÒÑ·¢ËÍµÄÁ¬ÐøÖ¡Êý */
-    uint16_t tx_timeout_counter;        /* ·¢ËÍ³¬Ê±¼ÆÊýÆ÷ (ms) */
-    uint8_t tx_bs;                      /* ¶Ô·½ÒªÇóµÄ¿é´óÐ¡ */
-    uint8_t tx_st_min;                  /* ¶Ô·½ÒªÇóµÄ×îÐ¡¼ä¸ôÊ±¼ä */
-    uint16_t tx_st_min_counter;         /* STmin ÑÓ³Ù¼ÆÊýÆ÷ */
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    isotp_tx_state_t tx_state;          /* ï¿½ï¿½ï¿½ï¿½×´Ì¬ */
+    uint32_t tx_dst_id;                 /* ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ CAN ID */
+    uint8_t* tx_buffer;                 /* ï¿½ï¿½ï¿½Í»ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ */
+    uint16_t tx_total_len;              /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½Ü³ï¿½ï¿½ï¿½ */
+    uint16_t tx_sent_len;               /* ï¿½Ñ·ï¿½ï¿½Í³ï¿½ï¿½ï¿½ */
+    uint8_t tx_seq;                     /* ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¡ï¿½ï¿½ï¿½ */
+    uint8_t tx_cf_count_in_block;       /* ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½Ñ·ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½ï¿½Ö¡ï¿½ï¿½ */
+    uint16_t tx_timeout_counter;        /* ï¿½ï¿½ï¿½Í³ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (ms) */
+    uint8_t tx_bs;                      /* ï¿½Ô·ï¿½Òªï¿½ï¿½Ä¿ï¿½ï¿½Ð¡ */
+    uint8_t tx_st_min;                  /* ï¿½Ô·ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ */
+    uint16_t tx_st_min_counter;         /* STmin ï¿½Ó³Ù¼ï¿½ï¿½ï¿½ï¿½ï¿½ */
     
-    /* ÅäÖÃ²ÎÊý */
-    uint8_t local_bs;                   /* ±¾¶Ë¿é´óÐ¡ (·¢ËÍÁ÷¿ØÊ±Ê¹ÓÃ) */
-    uint8_t local_st_min;               /* ±¾¶Ë×îÐ¡¼ä¸ôÊ±¼ä (·¢ËÍÁ÷¿ØÊ±Ê¹ÓÃ) */
-    uint16_t timeout_ms;                /* ³¬Ê±Ê±¼ä */
+    /* ï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½ */
+    uint8_t local_bs;                   /* ï¿½ï¿½ï¿½Ë¿ï¿½ï¿½Ð¡ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±Ê¹ï¿½ï¿½) */
+    uint8_t local_st_min;               /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±Ê¹ï¿½ï¿½) */
+    uint16_t timeout_ms;                /* ï¿½ï¿½Ê±Ê±ï¿½ï¿½ */
     
-    /* »Øµ÷º¯Êý */
-    uint8_t channel;                    /* CAN Í¨µÀºÅ */
+    /* ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ */
+    uint8_t channel;                    /* CAN Í¨ï¿½ï¿½ï¿½ï¿½ */
 } isotp_connection_t;
 
-/*****************************º¯ÊýÉùÃ÷(¹«¿ª)**********************************/
+/*****************************ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½)**********************************/
 
-/* ³õÊ¼»¯ ISO-TP ²ã */
+/* ï¿½ï¿½Ê¼ï¿½ï¿½ ISO-TP ï¿½ï¿½ */
 void isotp_init(uint8_t channel);
 
-/* 1ms ¶¨Ê±Æ÷¸üÐÂº¯Êý (ÔÚÍâ²¿ 1ms ÖÐ¶ÏÖÐµ÷ÓÃ) */
+/* 1ms ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Âºï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½â²¿ 1ms ï¿½Ð¶ï¿½ï¿½Ðµï¿½ï¿½ï¿½) */
 void isotp_ms_update(void);
 
-/* ½ÓÊÕ CAN Ö¡ (ÔÚ CAN ½ÓÊÕ»Øµ÷ÖÐµ÷ÓÃ) */
+/* ï¿½ï¿½ï¿½ï¿½ CAN Ö¡ (ï¿½ï¿½ CAN ï¿½ï¿½ï¿½Õ»Øµï¿½ï¿½Ðµï¿½ï¿½ï¿½) */
 int8_t isotp_receive_frame(uint8_t channel, uint32_t can_id, uint8_t* frame_data, 
                             uint8_t frame_len, uint8_t* out_data, uint16_t* out_len);
 
-/* ·¢ËÍÍêÕûÏûÏ¢ (×Ô¶¯²ð·ÖÎª FF/CF) */
+/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ (ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½Îª FF/CF) */
 int8_t isotp_send_message(uint8_t channel, uint32_t dst_id, uint8_t* data, uint16_t len);
 
-/* ·¢ËÍ´¦Àíº¯Êý (ÐèÒªÔÚÖ÷Ñ­»·ÖÐµ÷ÓÃ£¬´¦Àí·¢ËÍ×´Ì¬»ú) */
+/* ï¿½ï¿½ï¿½Í´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½Ñ­ï¿½ï¿½ï¿½Ðµï¿½ï¿½Ã£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½) */
 void isotp_tx_process(void);
 
-/* ÖØÖÃ½ÓÊÕ×´Ì¬ (ÓÃÓÚ´íÎó»Ö¸´) */
+/* ï¿½ï¿½ï¿½Ã½ï¿½ï¿½ï¿½×´Ì¬ (ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½Ö¸ï¿½) */
 void isotp_reset_rx(void);
 
-/* ÖØÖÃ·¢ËÍ×´Ì¬ */
+/* ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ï¿½×´Ì¬ */
 void isotp_reset_tx(void);
 
-/* »ñÈ¡µ±Ç°½ÓÊÕ×´Ì¬ */
+/* ï¿½ï¿½È¡ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½×´Ì¬ */
 isotp_rx_state_t isotp_get_rx_state(void);
 
-/* »ñÈ¡µ±Ç°·¢ËÍ×´Ì¬ */
+/* ï¿½ï¿½È¡ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½×´Ì¬ */
 isotp_tx_state_t isotp_get_tx_state(void);
 
-/* ´¦Àí½ÓÊÕµ½µÄÁ÷¿ØÖ¡ (ÔÚ isotp_receive_frame ÖÐµ÷ÓÃ) */
+/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¡ (ï¿½ï¿½ isotp_receive_frame ï¿½Ðµï¿½ï¿½ï¿½) */
 void isotp_handle_flow_control(uint8_t flow_status, uint8_t block_size, uint8_t st_min);
 
-/* ==================== CAN ID ¹ýÂË¼ÇÂ¼µ÷ÊÔ½Ó¿Ú ==================== */
+/* ==================== CAN ID ï¿½ï¿½ï¿½Ë¼ï¿½Â¼ï¿½ï¿½ï¿½Ô½Ó¿ï¿½ ==================== */
 #if (ISOTP_ENABLE_FILTER_RECORD == 1)
-/* »ñÈ¡×Ü¼ÇÂ¼´ÎÊý */
+/* ï¿½ï¿½È¡ï¿½Ü¼ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ */
 uint32_t isotp_get_filter_record_count(void);
 
-/* »ñÈ¡×îºó¼ÇÂ¼µÄ CAN ID */
+/* ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ CAN ID */
 uint32_t isotp_get_last_filtered_can_id(void);
 
-/* »ñÈ¡×îºó¼ÇÂ¼µÄÊý¾Ý */
+/* ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 void isotp_get_last_filtered_data(uint8_t* out_data, uint8_t* out_len);
 
-/* »ñÈ¡Ö¸¶¨Ë÷ÒýµÄ¼ÇÂ¼£¨0=×îÐÂ£¬1=´ÎÐÂ...£©*/
+/* ï¿½ï¿½È¡Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½Â¼ï¿½ï¿½0=ï¿½ï¿½ï¿½Â£ï¿½1=ï¿½ï¿½ï¿½ï¿½...ï¿½ï¿½*/
 bool isotp_get_filter_record(uint16_t index, uint32_t* can_id, uint8_t* data, uint8_t* len);
 #endif
 

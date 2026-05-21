@@ -88,11 +88,14 @@ static void fw_set_error(FlashDownloadResult_t error)
 
 static bool fw_is_address_valid(uint32_t address)
 {
-    // 只允许写入应用程序区域
+#if FW_FLASH_WRITE_ENABLED
     return (address >= FW_APP_START_ADDR && 
             address < (FW_APP_START_ADDR + FW_APP_MAX_SIZE));
+#else
+    (void)address;
+    return true;
+#endif
 }
-
 static bool fw_is_address_protected(uint32_t address)
 {
     if (g_fw_ctx.flash_handle == NULL) {
@@ -472,6 +475,7 @@ void FlashDownload_Task(void)
             {
                 FW_LOG_I("Verifying and writing firmware to Flash...");
                 
+#if FW_FLASH_WRITE_ENABLED
                 // 1. 先擦除目标Flash区域
                 uint32_t end_addr = g_fw_ctx.target_address + g_fw_ctx.total_size - 1;
                 FlashDownloadResult_t erase_result = fw_erase_range(g_fw_ctx.target_address, end_addr);
@@ -550,6 +554,9 @@ void FlashDownload_Task(void)
                     
                     FW_LOG_I("Flash verification PASSED");
                 }
+#else
+                FW_LOG_I("Flash write DISABLED (FW_FLASH_WRITE_ENABLED=0), skipping erase/write/verify");
+#endif
                 
                 // 4. 升级完成
                 fw_set_state(FW_UPDATE_COMPLETE);

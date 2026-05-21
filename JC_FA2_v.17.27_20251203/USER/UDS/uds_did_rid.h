@@ -18,7 +18,7 @@
 /***************************** RID 定义 **************************************/
 /* 例程控制标识符（2字节，高字节在前） */
 #define RID_ERASE_FIRMWARE          0xFF00  /* 擦除固件 */
-#define RID_CALCULATE_CRC           0xFF01  /* 计算CRC */
+#define RID_CALCULATE_CRC           0xFE00  /* 计算CRC (TBOX约定) */
 #define RID_JUMP_TO_BOOTLOADER      0xFF02  /* 跳转到Bootloader */
 #define RID_JUMP_TO_APPLICATION     0xFF03  /* 跳转到应用程序 */
 

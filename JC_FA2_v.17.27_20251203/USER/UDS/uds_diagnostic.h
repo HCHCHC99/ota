@@ -1,33 +1,33 @@
-/********************************ÎÄ¼þËµÃ÷*************************************
-*ÎÄ¼þÃû: uds_diagnostic.h
-*×÷Õß: AI Assistant
-*°æ±¾: V1.0.0
-*¹¦ÄÜ¼ò½é: UDS (ISO 14229) Í¨ÓÃÕï¶ÏÐ­Òé - ´øÍêÕû×´Ì¬»ú
-*±¸×¢: Ö§³Ö»á»°¹ÜÀí¡¢°²È«·ÃÎÊ¡¢Àý³Ì¿ØÖÆ¡¢¹Ì¼þÉý¼¶
+/********************************ï¿½Ä¼ï¿½Ëµï¿½ï¿½*************************************
+*ï¿½Ä¼ï¿½ï¿½ï¿½: uds_diagnostic.h
+*ï¿½ï¿½ï¿½ï¿½: AI Assistant
+*ï¿½æ±¾: V1.0.0
+*ï¿½ï¿½ï¿½Ü¼ï¿½ï¿½: UDS (ISO 14229) Í¨ï¿½ï¿½ï¿½ï¿½ï¿½Ð­ï¿½ï¿½ - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½
+*ï¿½ï¿½×¢: Ö§ï¿½Ö»á»°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½Ê¡ï¿½ï¿½ï¿½ï¿½Ì¿ï¿½ï¿½Æ¡ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ï¿½ï¿½
 *****************************************************************************/
 #ifndef UDS_DIAGNOSTIC_H_
 #define UDS_DIAGNOSTIC_H_
 
-/*****************************ÎÄ¼þ°üº¬(¹«¿ª)*********************************/
+/*****************************ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½)*********************************/
 #include "common.h"
 #include "stdint.h"
-#include "uds_did_rid.h"      // DID/RID ¶¨Òå
-#include "uds_dl_if.h"        // ³éÏóÏÂÔØ½Ó¿Ú
+#include "uds_did_rid.h"      // DID/RID ï¿½ï¿½ï¿½ï¿½
+#include "uds_dl_if.h"        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø½Ó¿ï¿½
 
-/******************************ºê¶¨Òå(¹«¿ª)***********************************/
-/* UDS Õï¶Ï CAN ID ÅäÖÃ (¿ÉÐÞ¸Ä) */
-#define UDS_PHYSICAL_REQUEST_ID     0x18DA03F1   /* ÎïÀíÑ°Ö·ÇëÇó ID (TBOX ¡ú ÍÆ¸Ë) */
-// #define UDS_PHYSICAL_RESPONSE_ID    0x18DAF103   /* ÎïÀíÑ°Ö·ÏìÓ¦ ID (ÍÆ¸Ë ¡ú TBOX) */
-#define UDS_PHYSICAL_RESPONSE_ID    0x12345678   /* ÎïÀíÑ°Ö·ÇëÇó ID (TBOX ¡ú ÍÆ¸Ë) */
-#define UDS_FUNCTIONAL_REQUEST_ID   0x18DBFFF0   /* ¹¦ÄÜÑ°Ö·ÇëÇó ID (¹ã²¥) */
+/******************************ï¿½ê¶¨ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½)***********************************/
+/* UDS ï¿½ï¿½ï¿½ CAN ID ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½Þ¸ï¿½) */
+#define UDS_PHYSICAL_REQUEST_ID     0x18DA03F1   /* ï¿½ï¿½ï¿½ï¿½Ñ°Ö·ï¿½ï¿½ï¿½ï¿½ ID (TBOX ï¿½ï¿½ ï¿½Æ¸ï¿½) */
+// #define UDS_PHYSICAL_RESPONSE_ID    0x18DAF103   /* ï¿½ï¿½ï¿½ï¿½Ñ°Ö·ï¿½ï¿½Ó¦ ID (ï¿½Æ¸ï¿½ ï¿½ï¿½ TBOX) */
+#define UDS_PHYSICAL_RESPONSE_ID    0x18DAF103   /* ï¿½ï¿½ï¿½ï¿½Ñ°Ö·ï¿½ï¿½ï¿½ï¿½ ID (TBOX ï¿½ï¿½ ï¿½Æ¸ï¿½) */
+#define UDS_FUNCTIONAL_REQUEST_ID   0x18DBFFF0   /* ï¿½ï¿½ï¿½ï¿½Ñ°Ö·ï¿½ï¿½ï¿½ï¿½ ID (ï¿½ã²¥) */
 
-/* CAN ID ¹ýÂË¿ª¹Ø
- * 1: ÆôÓÃ CAN ID ¹ýÂË£¬Ö»´¦ÀíÆ¥ÅäµÄÇëÇó ID
- * 0: ½ûÓÃ CAN ID ¹ýÂË£¬´¦ÀíËùÓÐÊÕµ½µÄÇëÇó£¨ÓÃÓÚµ÷ÊÔ£©
+/* CAN ID ï¿½ï¿½ï¿½Ë¿ï¿½ï¿½ï¿½
+ * 1: ï¿½ï¿½ï¿½ï¿½ CAN ID ï¿½ï¿½ï¿½Ë£ï¿½Ö»ï¿½ï¿½ï¿½ï¿½Æ¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ID
+ * 0: ï¿½ï¿½ï¿½ï¿½ CAN ID ï¿½ï¿½ï¿½Ë£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ï¿½Ô£ï¿½
  */
 #define UDS_ENABLE_CAN_ID_FILTER    1
 
-/* UDS Í¨ÓÃ·þÎñ ID (SID) */
+/* UDS Í¨ï¿½Ã·ï¿½ï¿½ï¿½ ID (SID) */
 #define UDS_SID_DIAGNOSTIC_SESSION_CONTROL      0x10
 #define UDS_SID_ECU_RESET                       0x11
 #define UDS_SID_CLEAR_DIAGNOSTIC_INFORMATION    0x14
@@ -41,7 +41,7 @@
 #define UDS_SID_REQUEST_TRANSFER_EXIT           0x37
 #define UDS_SID_TESTER_PRESENT                  0x3E
 
-/* UDS ·ñ¶¨ÏìÓ¦Âë (NRC) - »ùÓÚ ISO 14229 */
+/* UDS ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ (NRC) - ï¿½ï¿½ï¿½ï¿½ ISO 14229 */
 #define UDS_NRC_POSITIVE_RESPONSE               0x00
 #define UDS_NRC_GENERAL_REJECT                  0x10
 #define UDS_NRC_SERVICE_NOT_SUPPORTED           0x11
@@ -64,37 +64,37 @@
 #define UDS_NRC_SUB_FUNCTION_NOT_SUPPORTED_IN_ACTIVE_SESSION 0x7E
 #define UDS_NRC_SERVICE_NOT_SUPPORTED_IN_ACTIVE_SESSION     0x7F
 
-/* Õï¶Ï»á»°ÀàÐÍ */
+/* ï¿½ï¿½Ï»á»°ï¿½ï¿½ï¿½ï¿½ */
 #define UDS_SESSION_DEFAULT                     0x01
 #define UDS_SESSION_PROGRAMMING                 0x02
 #define UDS_SESSION_EXTENDED                    0x03
 
-/* ECU ¸´Î»ÀàÐÍ */
+/* ECU ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ */
 #define UDS_RESET_HARD                          0x01
 #define UDS_RESET_KEY_OFF_ON                    0x02
 #define UDS_RESET_SOFT                          0x03
 
-/* Àý³Ì¿ØÖÆÀàÐÍ (0x31) */
+/* ï¿½ï¿½ï¿½Ì¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (0x31) */
 #define UDS_ROUTINE_CONTROL_START               0x01
 #define UDS_ROUTINE_CONTROL_STOP                0x02
 #define UDS_ROUTINE_CONTROL_REQUEST_RESULTS     0x03
 
-/* ÅäÖÃ²ÎÊý */
+/* ï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½ */
 #define UDS_MAX_RESPONSE_LEN                    128
 #define UDS_DEFAULT_SESSION_TIMEOUT_MS          65535
 #define UDS_SECURITY_DELAY_BASE_MS              100
 #define UDS_SECURITY_MAX_ATTEMPTS               3
 
-/* µ÷ÊÔÅäÖÃ */
+/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 #define UDS_DEBUG_PRINT_ENABLE                  1
 #define UDS_STATE_PRINT_INTERVAL_MS             655350
 
-/* ÖÖ×ÓÄ£Ê½ÅäÖÃ */
+/* ï¿½ï¿½ï¿½ï¿½Ä£Ê½ï¿½ï¿½ï¿½ï¿½ */
 #define UDS_SEED_MODE_FIXED                     1
 #define UDS_FIXED_SEED_VALUE                    0x12345678
 
-/**************************Êý¾ÝÀàÐÍ¼°½á¹¹¶¨Òå(¹«¿ª)***************************/
-/* UDS »á»°×´Ì¬ */
+/**************************ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ï¿½á¹¹ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½)***************************/
+/* UDS ï¿½á»°×´Ì¬ */
 typedef enum
 {
     UDS_SESSION_DEFAULT_MODE = 0x01,
@@ -102,7 +102,7 @@ typedef enum
     UDS_SESSION_PROGRAMMING_MODE = 0x02,
 } uds_session_mode_t;
 
-/* UDS °²È«·ÃÎÊ×´Ì¬ */
+/* UDS ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½×´Ì¬ */
 typedef enum
 {
     UDS_SECURITY_LOCKED = 0,
@@ -110,7 +110,7 @@ typedef enum
     UDS_SECURITY_UNLOCKED,
 } uds_security_state_t;
 
-/* Àý³ÌÖ´ÐÐ×´Ì¬ */
+/* ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ï¿½×´Ì¬ */
 typedef struct
 {
     uint16_t routine_id;
@@ -118,7 +118,7 @@ typedef struct
     uint32_t result;
 } uds_routine_t;
 
-/* UDS ¿ØÖÆ¿é */
+/* UDS ï¿½ï¿½ï¿½Æ¿ï¿½ */
 typedef struct
 {
     uds_session_mode_t session_mode;
@@ -131,14 +131,14 @@ typedef struct
     uint16_t session_timeout_ms;
     uint8_t max_attempts;
     
-    /* DID Êý¾Ý´æ´¢ */
+    /* DID ï¿½ï¿½ï¿½Ý´æ´¢ */
     uint16_t firmware_version;
     uint16_t bootloader_version;
     uint32_t firmware_crc;
     
 } uds_ctrl_t;
 
-/*****************************º¯ÊýÉùÃ÷(¹«¿ª)**********************************/
+/*****************************ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½)**********************************/
 void uds_init(void);
 void uds_ms_update(void);
 void uds_process(void);

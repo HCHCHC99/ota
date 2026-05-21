@@ -355,15 +355,12 @@ static void uds_handle_diagnostic_session_control(uint8_t* data, uint8_t len, ui
     }
     else if (requested_session == UDS_SESSION_PROGRAMMING_MODE)
     {
-        if (g_uds_ctrl.security_state != UDS_SECURITY_UNLOCKED)
-        {
-            UDS_W("Programming session requires security unlock");
-            uds_send_negative_response(0, data[0], UDS_NRC_SECURITY_ACCESS_DENIED);
-            return;
-        }
-        
         UDS_I("Session change: %d -> PROGRAMMING", g_uds_ctrl.session_mode);
         g_uds_ctrl.session_mode = UDS_SESSION_PROGRAMMING_MODE;
+        g_uds_ctrl.security_state = UDS_SECURITY_LOCKED;
+        g_uds_ctrl.security_attempts = 0;
+        g_uds_ctrl.security_seed = 0;
+        g_uds_ctrl.security_delay_ms = 0;
     }
     
     resp[0] = sub_func;
@@ -720,6 +717,17 @@ static void uds_handle_routine_control(uint8_t* data, uint8_t len, uint8_t* resp
         }
     }
     
+    /* 检查RID是否支持，未知RID返回NRC避免8字节FF卡死TX */
+    if (routine_id != RID_ERASE_FIRMWARE &&
+        routine_id != RID_CALCULATE_CRC &&
+        routine_id != RID_JUMP_TO_BOOTLOADER &&
+        routine_id != RID_JUMP_TO_APPLICATION)
+    {
+        UDS_W("Routine ID not supported: 0x%04X", routine_id);
+        uds_send_negative_response(0, data[0], UDS_NRC_REQUEST_OUT_OF_RANGE);
+        return;
+    }
+    
     switch (sub_func)
     {
         case UDS_ROUTINE_CONTROL_START:
@@ -740,11 +748,10 @@ static void uds_handle_routine_control(uint8_t* data, uint8_t len, uint8_t* resp
             resp[0] = sub_func;
             resp[1] = (routine_id >> 8) & 0xFF;
             resp[2] = routine_id & 0xFF;
-            resp[3] = (routine_result >> 24) & 0xFF;
-            resp[4] = (routine_result >> 16) & 0xFF;
-            resp[5] = (routine_result >> 8) & 0xFF;
-            resp[6] = routine_result & 0xFF;
-            *resp_len = 7;
+            resp[3] = (routine_result >> 16) & 0xFF;
+            resp[4] = (routine_result >> 8) & 0xFF;
+            resp[5] = routine_result & 0xFF;
+            *resp_len = 6;
             break;
             
         case UDS_ROUTINE_CONTROL_STOP:
@@ -764,11 +771,10 @@ static void uds_handle_routine_control(uint8_t* data, uint8_t len, uint8_t* resp
             resp[0] = sub_func;
             resp[1] = (routine_id >> 8) & 0xFF;
             resp[2] = routine_id & 0xFF;
-            resp[3] = (routine_result >> 24) & 0xFF;
-            resp[4] = (routine_result >> 16) & 0xFF;
-            resp[5] = (routine_result >> 8) & 0xFF;
-            resp[6] = routine_result & 0xFF;
-            *resp_len = 7;
+            resp[3] = (routine_result >> 16) & 0xFF;
+            resp[4] = (routine_result >> 8) & 0xFF;
+            resp[5] = routine_result & 0xFF;
+            *resp_len = 6;
             break;
             
         case UDS_ROUTINE_CONTROL_REQUEST_RESULTS:
@@ -786,13 +792,12 @@ static void uds_handle_routine_control(uint8_t* data, uint8_t len, uint8_t* resp
             resp[0] = sub_func;
             resp[1] = (routine_id >> 8) & 0xFF;
             resp[2] = routine_id & 0xFF;
-            resp[3] = (routine_result >> 24) & 0xFF;
-            resp[4] = (routine_result >> 16) & 0xFF;
-            resp[5] = (routine_result >> 8) & 0xFF;
-            resp[6] = routine_result & 0xFF;
-            *resp_len = 7;
-            break;
+            resp[3] = (routine_result >> 16) & 0xFF;
+            resp[4] = (routine_result >> 8) & 0xFF;
+            resp[5] = routine_result & 0xFF;
+            *resp_len = 6;
             
+            break;
         default:
             UDS_W("Sub-function not supported: 0x%02X", sub_func);
             uds_send_negative_response(0, data[0], UDS_NRC_SUB_FUNCTION_NOT_SUPPORTED);
@@ -912,17 +917,35 @@ static void uds_handle_request_download(uint8_t* data, uint8_t len, uint8_t* res
         return;
     }
     
-    if (len < 9)
+    /* UDS: SID + dataFormatIdentifier + addrSizeFmtIdentifier + addr[N] + size[N] */
+    uint8_t dfi  = data[1];
+    uint8_t alfi = data[2];
+    uint8_t addr_len = (alfi >> 4) & 0x0F;
+    uint8_t size_len = alfi & 0x0F;
+    
+    if (addr_len == 0 || addr_len > 4 || size_len == 0 || size_len > 4)
     {
-        UDS_E("Length error: len=%d < 9", len);
+        UDS_E("Invalid addr/size length: alfi=0x%02X", alfi);
+        uds_send_negative_response(0, data[0], UDS_NRC_REQUEST_OUT_OF_RANGE);
+        return;
+    }
+    
+    if (len < (uint8_t)(3 + addr_len + size_len))
+    {
+        UDS_E("Length error: len=%d < %d", len, 3 + addr_len + size_len);
         uds_send_negative_response(0, data[0], UDS_NRC_INCORRECT_MESSAGE_LENGTH);
         return;
     }
     
-    /* 解析地址和数据长度（大端序） */
-    uint32_t address = (data[1] << 24) | (data[2] << 16) | (data[3] << 8) | data[4];
-    uint32_t size = (data[5] << 24) | (data[6] << 16) | (data[7] << 8) | data[8];
-    
+    uint32_t address = 0;
+    for (uint8_t i = 0; i < addr_len; i++) {
+        address = (address << 8) | data[3 + i];
+    }
+    uint32_t size = 0;
+    for (uint8_t i = 0; i < size_len; i++) {
+        size = (size << 8) | data[3 + addr_len + i];
+    }
+
     UDS_I("Request download: addr=0x%08X, size=%d bytes", address, size);
     
     const uds_dl_if_t* dl = uds_dl_get_if();
