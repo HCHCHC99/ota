@@ -357,6 +357,10 @@ static void uds_handle_diagnostic_session_control(uint8_t* data, uint8_t len, ui
     {
         UDS_I("Session change: %d -> PROGRAMMING", g_uds_ctrl.session_mode);
         g_uds_ctrl.session_mode = UDS_SESSION_PROGRAMMING_MODE;
+        g_uds_ctrl.security_state = UDS_SECURITY_LOCKED;
+        g_uds_ctrl.security_attempts = 0;
+        g_uds_ctrl.security_seed = 0;
+        g_uds_ctrl.security_delay_ms = 0;
     }
     
     resp[0] = sub_func;
