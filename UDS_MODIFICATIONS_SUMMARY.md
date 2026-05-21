@@ -107,6 +107,50 @@ ISOTP_OK -> uds_receive_handler()
 
 2. 需重新编译烧录测试：验证RoutineControl流程（0x31）是否正确完成，TBOX是否继续发送0x34请求下载。
 
+### 8. USER/UDS/uds_diagnostic.c — 0x34 RequestDownload 解析修复
+
+0x34 请求数据格式修复（uds_handle_request_download 函数）：
+- 修改前：data[1..4] 直接当作地址，data[5..8] 直接当作长度
+- 修改后：按 UDS 标准格式解析 dataFormatIdentifier + addressAndLengthFormatIdentifier
+  - data[1] = dataFormatIdentifier
+  - data[2] = alfi（高4位=地址字节数，低4位=长度字节数）
+  - 从 data[3] 开始按实际字节数提取地址和大小
+- TBOX 数据示例：34 00 44 08 00 40 00 00 00 2C 90 -> addr=0x08004000, size=11408
+
+### 9. USER/UDS/flash_download.c — Flash模拟模式增强
+
+fw_is_address_valid() 函数：
+- FW_FLASH_WRITE_ENABLED=1 时：执行真实地址范围校验
+- FW_FLASH_WRITE_ENABLED=0 时：直接返回 true，跳过地址校验
+
+Flash 擦除/写入/验证已在 FW_UPDATE_VERIFYING 状态中通过 #if FW_FLASH_WRITE_ENABLED 保护。
+
+### 10. USER/UDS/uds_did_rid.h — RID 匹配修复
+
+| 修改项 | 修改前 | 修改后 | 说明 |
+|--------|--------|--------|------|
+| RID_CALCULATE_CRC | 0xFEF0 | 0xFE00 | 匹配 TBOX 约定的 RID |
+
+### 11. USER/UDS/uds_diagnostic.c — PROGRAMMING 会话安全状态复位
+
+Session 切换到 PROGRAMMING_MODE 时新增安全状态复位：
+- g_uds_ctrl.security_state = UDS_SECURITY_LOCKED
+- g_uds_ctrl.security_attempts = 0
+- g_uds_ctrl.security_seed = 0
+- g_uds_ctrl.security_delay_ms = 0
+
+修复原因：PROGRAMMING 会话后 TBOX 重新发起 27 01，但安全状态仍为 UNLOCKED，导致 NRC 0x24 (requestSequenceError)。
+
+### 12. USER/UDS/isotp_transport.c — 调试日志清理
+
+- 删除 [DBG] 状态调试打印
+- 删除全部 4 处 [FC-TRACE] 日志
+- 新增 isotp_ota_annotate() 函数：对 RX 帧（<--）增加人类可读的注释
+- isotp_print_ota_frame() 中 RX 帧打印格式：
+  OTA_I("seq=%-4d, %s 0x%08X, %02X ... %s", seq, direction, can_id, data..., annotation)
+
+
+
 ---
 
 ## 编码注意事项

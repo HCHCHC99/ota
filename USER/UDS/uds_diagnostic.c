@@ -917,17 +917,35 @@ static void uds_handle_request_download(uint8_t* data, uint8_t len, uint8_t* res
         return;
     }
     
-    if (len < 9)
+    /* UDS: SID + dataFormatIdentifier + addrSizeFmtIdentifier + addr[N] + size[N] */
+    uint8_t dfi  = data[1];
+    uint8_t alfi = data[2];
+    uint8_t addr_len = (alfi >> 4) & 0x0F;
+    uint8_t size_len = alfi & 0x0F;
+    
+    if (addr_len == 0 || addr_len > 4 || size_len == 0 || size_len > 4)
     {
-        UDS_E("Length error: len=%d < 9", len);
+        UDS_E("Invalid addr/size length: alfi=0x%02X", alfi);
+        uds_send_negative_response(0, data[0], UDS_NRC_REQUEST_OUT_OF_RANGE);
+        return;
+    }
+    
+    if (len < (uint8_t)(3 + addr_len + size_len))
+    {
+        UDS_E("Length error: len=%d < %d", len, 3 + addr_len + size_len);
         uds_send_negative_response(0, data[0], UDS_NRC_INCORRECT_MESSAGE_LENGTH);
         return;
     }
     
-    /* 解析地址和数据长度（大端序） */
-    uint32_t address = (data[1] << 24) | (data[2] << 16) | (data[3] << 8) | data[4];
-    uint32_t size = (data[5] << 24) | (data[6] << 16) | (data[7] << 8) | data[8];
-    
+    uint32_t address = 0;
+    for (uint8_t i = 0; i < addr_len; i++) {
+        address = (address << 8) | data[3 + i];
+    }
+    uint32_t size = 0;
+    for (uint8_t i = 0; i < size_len; i++) {
+        size = (size << 8) | data[3 + addr_len + i];
+    }
+
     UDS_I("Request download: addr=0x%08X, size=%d bytes", address, size);
     
     const uds_dl_if_t* dl = uds_dl_get_if();

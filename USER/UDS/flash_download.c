@@ -88,11 +88,14 @@ static void fw_set_error(FlashDownloadResult_t error)
 
 static bool fw_is_address_valid(uint32_t address)
 {
-    // 只允许写入应用程序区域
+#if FW_FLASH_WRITE_ENABLED
     return (address >= FW_APP_START_ADDR && 
             address < (FW_APP_START_ADDR + FW_APP_MAX_SIZE));
+#else
+    (void)address;
+    return true;
+#endif
 }
-
 static bool fw_is_address_protected(uint32_t address)
 {
     if (g_fw_ctx.flash_handle == NULL) {
