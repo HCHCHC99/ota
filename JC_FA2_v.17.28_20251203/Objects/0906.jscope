@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<JScopeProject>
+    <FileVersion major="1" minor="1" />
+    <Project>
+        <Configuration>
+            <JLink>
+                <Options IsRTTSession="0" IsRTTWithTimeStamp="1" SamplingPeriod="100" Connection="1" SerialNo="0" IP="" TargetDevice="unspecified" TargetInterface="SWD" InterfaceSpeed="4000" />
+            </JLink>
+            <ElfFile Name="D:\1_qxd\2023\1.Routine_work\7.FA2_Integration\(GY-20230703)Integration_FA2\1-SW Project\1.Controller\1.FA2IntegrationSelf-locking_20230803\1.FA2_IntegrationFirstVer_20230810\20230904\SelfLockingFA2_DC\Objects\Selflocking_FA2.axf" />
+            <DataFile Name="" />
+            <RawFile Name="" />
+            <Scope>
+                <Options TimeResolutionUs="1000000" />
+            </Scope>
+        </Configuration>
+        <Windows>
+            <Graph Show="1" />
+            <Watch Show="1" />
+        </Windows>
+        <SelectedSymbols>
+            <Symbol>
+                <Options Name="PWMDuty" Address="0x1FFF842A" Type="short" TypeID="11" Size="2" GraphColorRed="255" GraphColorGreen="215" GraphColorBlue="0" YMinSampled="0" YMaxSampled="1320" YAvgSampled="819" Offset="4" ShowInGraph="1" YOffset="400" IsAutoConfig="0" YResolution="200" MaxValue="400" File="USER\MotorControl\mc_app.c" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="MeasureSpd_M" Address="0x1FFF84BC" Type="int" TypeID="12" Size="4" GraphColorRed="0" GraphColorGreen="255" GraphColorBlue="0" YMinSampled="0" YMaxSampled="3050" YAvgSampled="1921" Offset="6" ShowInGraph="1" YOffset="400" IsAutoConfig="0" YResolution="1000" MaxValue="2" File="USER\MotorControl\mc_app.c" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="TargetSpeed" Address="0x1FFF8544" Type="int" TypeID="12" Size="4" GraphColorRed="0" GraphColorGreen="0" GraphColorBlue="255" YMinSampled="500" YMaxSampled="3000" YAvgSampled="2070" Offset="10" ShowInGraph="1" YOffset="400" IsAutoConfig="0" YResolution="1000" MaxValue="1000" File="USER\MotorControl\mc_app.c" Scope="0" DrawStyle="0" />
+            </Symbol>
+        </SelectedSymbols>
+    </Project>
+</JScopeProject>

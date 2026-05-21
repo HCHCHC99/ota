@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<JScopeProject>
+    <FileVersion major="1" minor="1" />
+    <Project>
+        <Configuration>
+            <JLink>
+                <Options IsRTTSession="0" IsRTTWithTimeStamp="1" SamplingPeriod="100" Connection="1" SerialNo="0" IP="" TargetDevice="Cortex-M4" TargetInterface="SWD" InterfaceSpeed="4000" />
+            </JLink>
+            <ElfFile Name="C:\Users\user\Desktop\(GY-20230308)Leapting_FA2\1-SW Project\1.Controller\Leapting_FA2-230329\Objects\Leapting_FA2.axf" />
+            <DataFile Name="" />
+            <RawFile Name="" />
+            <Scope>
+                <Options TimeResolutionUs="1000000" />
+            </Scope>
+        </Configuration>
+        <Windows>
+            <Graph Show="1" />
+            <Watch Show="1" />
+        </Windows>
+        <SelectedSymbols>
+            <Symbol>
+                <Options Name="FdbkSpeed" Address="0x1FFF8534" Type="int" TypeID="12" Size="4" GraphColorRed="255" GraphColorGreen="215" GraphColorBlue="0" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="4" ShowInGraph="1" YOffset="200" IsAutoConfig="0" YResolution="1000" MaxValue="4000" File="USER\MotorControl\mc_app.c" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="TargetSpeed" Address="0x1FFF8538" Type="int" TypeID="12" Size="4" GraphColorRed="0" GraphColorGreen="255" GraphColorBlue="0" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="8" ShowInGraph="1" YOffset="200" IsAutoConfig="0" YResolution="1000" MaxValue="4000" File="USER\MotorControl\mc_app.c" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="FdbkPos" Address="0x1FFF85D8" Type="int" TypeID="12" Size="4" GraphColorRed="0" GraphColorGreen="0" GraphColorBlue="176" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="12" ShowInGraph="1" YOffset="100" IsAutoConfig="0" YResolution="500" MaxValue="1000000" File="USER\MotorControl\mc_app.c" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="TargetPos" Address="0x1FFF85DC" Type="int" TypeID="12" Size="4" GraphColorRed="160" GraphColorGreen="32" GraphColorBlue="240" YMinSampled="-8" YMaxSampled="7" YAvgSampled="5" Offset="16" ShowInGraph="0" YOffset="130" IsAutoConfig="0" YResolution="500" MaxValue="1000000" File="USER\MotorControl\mc_app.c" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="vt" Address="0x1FFF8674" Type="int" TypeID="12" Size="4" GraphColorRed="255" GraphColorGreen="0" GraphColorBlue="0" YMinSampled="2097157" YMaxSampled="2097157" YAvgSampled="2097157" Offset="20" ShowInGraph="1" YOffset="300" IsAutoConfig="0" YResolution="500" MaxValue="1500" File="USER\MotorControl\mc_app.c" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="Output" Address="0x1FFF85E8" Type="short" TypeID="11" Size="2" GraphColorRed="0" GraphColorGreen="191" GraphColorBlue="255" YMinSampled="-7936" YMaxSampled="-7936" YAvgSampled="-7936" Offset="24" ShowInGraph="1" YOffset="300" IsAutoConfig="0" YResolution="500" MaxValue="1300" File="USER\MotorControl\mc_app.c" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="Pt" Address="0x1FFF8678" Type="int" TypeID="12" Size="4" GraphColorRed="0" GraphColorGreen="100" GraphColorBlue="0" YMinSampled="1310720" YMaxSampled="1311489" YAvgSampled="1310720" Offset="26" ShowInGraph="1" YOffset="100" IsAutoConfig="0" YResolution="500" MaxValue="10000" File="USER\MotorControl\mc_app.c" Scope="0" DrawStyle="0" />
+            </Symbol>
+        </SelectedSymbols>
+    </Project>
+</JScopeProject>
