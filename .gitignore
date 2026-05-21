@@ -1,28 +1,47 @@
-# Build outputs
-Objects/
-Listings/
-*.axf
-*.bin
-*.hex
+# Keil MDK build output
+template/MDK/output/
+*.dep
+*.uvgui*
+*.uvguix*
+JLinkLog.txt
+*.Administrator
+*.CrApplication
+*.D99
+
+# Compiled objects
 *.o
+*.obj
+*.axf
+*.hex
+*.bin
+*.elf
+*.out
 *.lst
 *.map
-*.build_log.htm
+*.d
+*.crf
+*.htm
 *.lnp
+*.plg
+*.iex
+*.bak
 *.sct
+*.scvd
+*.tra
 
-# Keil IDE user settings (local only)
-*.uvguix.*
-*.uvgui.*
-JLinkLog.txt
-JLinkSettings.ini
+# RTE
+RTE/
 
-# OTA test data (debug logs)
-ota data*.txt
+# JLink
+JLink*
 
-# Python cache
-__pycache__/
-*.pyc
-
-# VS Code
+# Editor
 .vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
