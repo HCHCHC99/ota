@@ -12,6 +12,14 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 EXTRACTED_FILE = os.path.join(SCRIPT_DIR, "extracted_firmware.txt")
 APP1_BIN_PATH = r"F:\Enterprise WeChat\WXWork\1688858205719851\Cache\File\2026-04\app1.bin"
 
+def safe_input(prompt=""):
+    """安全 input，非交互模式下不报错"""
+    try:
+        return input(prompt)
+    except EOFError:
+        return ""
+
+
 # ========== UDS 下载参数 (从 ota data4.txt 日志提取) ==========
 TARGET_FLASH_ADDR = 0x08004000   # RequestDownload 目标地址
 FLASH_BASE = 0x08000000          # Flash 基地址
@@ -126,6 +134,8 @@ def print_hex_diff(extracted, reference, ref_offset):
 
     print("\n[DIFF] 差异详情 (全部):")
     print("-" * 78)
+    print("  格式: XX[YY] = 提取数据[app1.bin参考数据]")
+    print()
 
     for row in sorted(rows_with_diff):
         row_start = row << 4
@@ -155,7 +165,7 @@ def main():
     print("[INFO] 加载提取的固件数据...")
     extracted = parse_extracted_hex(EXTRACTED_FILE)
     if extracted is None:
-        input("\n按 Enter 键退出...")
+        safe_input("\n按 Enter 键退出...")
         return
     print(f"      文件: {EXTRACTED_FILE}")
     print(f"      大小: {len(extracted)} bytes ({len(extracted)/1024:.2f} KB)")
@@ -165,7 +175,7 @@ def main():
     print("[INFO] 加载参考固件...")
     reference = read_bin(APP1_BIN_PATH)
     if reference is None:
-        input("\n按 Enter 键退出...")
+        safe_input("\n按 Enter 键退出...")
         return
     print(f"      文件: {APP1_BIN_PATH}")
     print(f"      大小: {len(reference)} bytes ({len(reference)/1024:.2f} KB)")
@@ -188,7 +198,7 @@ def main():
     result = compare_data(extracted, reference, best_offset)
     if result is None:
         print("[ERROR] 无法对比：数据范围不重叠")
-        input("\n按 Enter 键退出...")
+        safe_input("\n按 Enter 键退出...")
         return
 
     print()
@@ -251,7 +261,7 @@ def main():
     print("  检测完成!")
     print("=" * 62)
 
-    input("\n按 Enter 键退出...")
+    safe_input("\n按 Enter 键退出...")
 
 
 if __name__ == "__main__":
