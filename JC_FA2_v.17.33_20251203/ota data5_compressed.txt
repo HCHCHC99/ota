@@ -1,0 +1,849 @@
+========================================================================
+  OTA 日志压缩分析报告
+  原始行数: 11,813  识别周期: 10
+  不同模式: 4
+========================================================================
+
+────────────────────────────────────────────────────────────────────────
+【模式 1】 出现 5 次
+  指纹: RX_0x10_SF → RX_0x50_SF → RX_0x27_SF → RX_0x67_SF → RX_0x27_SF → RX_0x67_SF → RX_0x31_FF → FC → RX_0x71_SF → RX_0x34_FF → FC → req_dl → wrong_state_dl → NRC_0x21 → RX_0x34_FF → FC → req_dl → wrong_state_dl → NRC_0x21 → RX_0x34_FF → FC → req_dl → wrong_state_dl → NRC_0x21 → RX_0x34_FF → FC → req_dl → wrong_state_dl → NRC_0x21 → RX_0x34_FF → FC → req_dl → wrong_state_dl → NRC_0x21
+  时间: 25.32s ~ 293.19s  (跨度 267.9s)
+
+  ── 首次出现 (行 3704~3755) ──
+    [RX] 02 10 02 00 00 00 00 00  <-- Session:PROG
+    [TX] 02 50 02 AA AA AA AA AA  
+    [RX] 02 27 01 00 00 00 00 00  <-- ReqSeed
+    [TX] 06 67 01 12 34 56 78 AA  
+    [RX] 06 27 02 D0 99 A1 7B 00  <-- SendKey
+    [TX] 02 67 02 AA AA AA AA AA  
+    [RX] 10 0D 31 01 FE 00 00 08  <-- FF RoutineControl
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×1) ...
+    [TX] 03 71 71 01 AA AA AA AA  
+    [RX] 10 0B 34 00 44 08 00 40  <-- FF
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×1) ...
+    00> [FW] >>> OnRequestDownload: addr=0x08004000, size=11408 bytes
+    00> [FW] Wrong state for download: 5
+    [TX] 03 7F 34 21 AA AA AA AA  
+    [RX] 10 0B 34 00 44 08 00 40  <-- FF
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×1) ...
+    00> [FW] >>> OnRequestDownload: addr=0x08004000, size=11408 bytes
+    00> [FW] Wrong state for download: 5
+    [TX] 03 7F 34 21 AA AA AA AA  
+    [RX] 10 0B 34 00 44 08 00 40  <-- FF
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×1) ...
+    00> [FW] >>> OnRequestDownload: addr=0x08004000, size=11408 bytes
+    00> [FW] Wrong state for download: 5
+    [TX] 03 7F 34 21 AA AA AA AA  
+    [RX] 10 0B 34 00 44 08 00 40  <-- FF
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×1) ...
+    00> [FW] >>> OnRequestDownload: addr=0x08004000, size=11408 bytes
+    00> [FW] Wrong state for download: 5
+    [TX] 03 7F 34 21 AA AA AA AA  
+    [RX] 10 0B 34 00 44 08 00 40  <-- FF
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×1) ...
+    00> [FW] >>> OnRequestDownload: addr=0x08004000, size=11408 bytes
+    00> [FW] Wrong state for download: 5
+    [TX] 03 7F 34 21 AA AA AA AA  
+
+  ── 后续 4 次 (时间/行号) ──
+    第2次: 26.6s  行3756~3807
+    第3次: 290.4s  行3861~3912
+    第4次: 291.6s  行3913~3964
+    第5次: 292.9s  行3965~4016
+
+────────────────────────────────────────────────────────────────────────
+【模式 2】 出现 3 次
+  指纹: RX_0x10_SF → RX_0x50_SF → RX_0x27_SF → RX_0x67_SF → RX_0x27_SF → RX_0x67_SF → RX_0x31_FF → FC → RX_0x71_SF → RX_0x34_FF → FC → req_dl → state_change → RX_0x74_SF → RX_0x36_FF → FC → state_change → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x37_SF → transfer_exit → crc → state_change → NRC_0x78 → verifying → write_disabled → state_change → complete → summary → RX_0x37_SF → transfer_exit → RX_0x77_SF → RX_0x31_FF → FC → RX_0x71_SF → RX_0x11_SF → NRC_0x12
+  时间: 22.11s ~ 61.38s  (跨度 39.3s)
+
+  ── 首次出现 (行 6012~7945) ──
+    [RX] 02 10 02 00 00 00 00 00  <-- Session:PROG
+    [TX] 02 50 02 AA AA AA AA AA  
+    [RX] 02 27 01 00 00 00 00 00  <-- ReqSeed
+    [TX] 06 67 01 12 34 56 78 AA  
+    [RX] 06 27 02 D0 99 A1 7B 00  <-- SendKey
+    [TX] 02 67 02 AA AA AA AA AA  
+    [RX] 10 0D 31 01 FE 00 00 08  <-- FF RoutineControl
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×1) ...
+    [TX] 03 71 71 01 AA AA AA AA  
+    [RX] 10 0B 34 00 44 08 00 40  <-- FF
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×1) ...
+    00> [FW] >>> OnRequestDownload: addr=0x08004000, size=11408 bytes
+    00> [FW] State: 5 -> 2
+    [TX] 03 74 40 00 AA AA AA AA  
+    [RX] 11 02 36 01 18 86 FF 1F  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=1, len=256
+    00> [FW] State: 2 -> 3
+    [TX] 03 76 76 01 AA AA AA AA  
+    [RX] 11 02 36 02 CD D2 04 00  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=2, len=256
+    [TX] 03 76 76 02 AA AA AA AA  
+    [RX] 11 02 36 03 CD D8 04 00  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=3, len=256
+    [TX] 03 76 76 03 AA AA AA AA  
+    [RX] 11 02 36 04 1B E0 28 46  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=4, len=256
+    [TX] 03 76 76 04 AA AA AA AA  
+    [RX] 11 02 36 05 07 49 08 70  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=5, len=256
+    [TX] 03 76 76 05 AA AA AA AA  
+    [RX] 11 02 36 06 01 E0 00 BF  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=6, len=256
+    [TX] 03 76 76 06 AA AA AA AA  
+    [RX] 11 02 36 07 05 68 36 6A  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=7, len=256
+    [TX] 03 76 76 07 AA AA AA AA  
+    [RX] 11 02 36 08 30 5F 63 6C  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=8, len=256
+    [TX] 03 76 76 08 AA AA AA AA  
+    [RX] 11 02 36 09 6B 2E 63 00  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=9, len=256
+    [TX] 03 76 76 09 AA AA AA AA  
+    [RX] 11 02 36 0A FE 03 08 46  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=10, len=256
+    [TX] 03 76 76 0A AA AA AA AA  
+    [RX] 11 02 36 0B 03 28 1C D0  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=11, len=256
+    [TX] 03 76 76 0B AA AA AA AA  
+    [RX] 11 02 36 0C 05 98 40 1C  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=12, len=256
+    [TX] 03 76 76 0C AA AA AA AA  
+    [RX] 11 02 36 0D 10 B5 04 46  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=13, len=256
+    [TX] 03 76 76 0D AA AA AA AA  
+    [RX] 11 02 36 0E 00 68 20 F0  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=14, len=256
+    [TX] 03 76 76 0E AA AA AA AA  
+    [RX] 11 02 36 0F A9 FE 2A 48  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=15, len=256
+    [TX] 03 76 76 0F AA AA AA AA  
+    [RX] 11 02 36 10 80 47 10 BD  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=16, len=256
+    [TX] 03 76 76 10 AA AA AA AA  
+    [RX] 11 02 36 11 01 49 C8 6B  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=17, len=256
+    [TX] 03 76 76 11 AA AA AA AA  
+    [RX] 11 02 36 12 00 6F 10 B1  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=18, len=256
+    [TX] 03 76 76 12 AA AA AA AA  
+    [RX] 11 02 36 13 D1 F8 9C 00  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=19, len=256
+    [TX] 03 76 76 13 AA AA AA AA  
+    [RX] 11 02 36 14 D0 F8 C8 00  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=20, len=256
+    [TX] 03 76 76 14 AA AA AA AA  
+    [RX] 11 02 36 15 18 80 FF 1F  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=21, len=256
+    [TX] 03 76 76 15 AA AA AA AA  
+    [RX] 11 02 36 16 D1 F8 1C 01  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=22, len=256
+    [TX] 03 76 76 16 AA AA AA AA  
+    [RX] 11 02 36 17 D0 F8 48 01  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=23, len=256
+    [TX] 03 76 76 17 AA AA AA AA  
+    [RX] 11 02 36 18 18 80 FF 1F  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=24, len=256
+    [TX] 03 76 76 18 AA AA AA AA  
+    [RX] 11 02 36 19 D1 F8 9C 01  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=25, len=256
+    [TX] 03 76 76 19 AA AA AA AA  
+    [RX] 11 02 36 1A D0 F8 C8 01  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=26, len=256
+    [TX] 03 76 76 1A AA AA AA AA  
+    [RX] 11 02 36 1B 18 80 FF 1F  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=27, len=256
+    [TX] 03 76 76 1B AA AA AA AA  
+    [RX] 11 02 36 1C 01 28 00 D1  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=28, len=256
+    [TX] 03 76 76 1C AA AA AA AA  
+    [RX] 11 02 36 1D 00 BF 00 BF  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=29, len=256
+    [TX] 03 76 76 1D AA AA AA AA  
+    [RX] 11 02 36 1E 09 A0 FE F7  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=30, len=256
+    [TX] 03 76 76 1E AA AA AA AA  
+    [RX] 11 02 36 1F 20 48 00 88  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=31, len=256
+    [TX] 03 76 76 1F AA AA AA AA  
+    [RX] 11 02 36 20 B3 FE 00 BF  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=32, len=256
+    [TX] 03 76 76 20 AA AA AA AA  
+    [RX] 11 02 36 21 FD 48 84 42  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=33, len=256
+    [TX] 03 76 76 21 AA AA AA AA  
+    [RX] 11 02 36 22 81 08 00 98  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=34, len=256
+    [TX] 03 76 76 22 AA AA AA AA  
+    [RX] 11 02 36 23 61 F3 DF 70  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=35, len=256
+    [TX] 03 76 76 23 AA AA AA AA  
+    [RX] 11 02 36 24 9D F8 03 10  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=36, len=256
+    [TX] 03 76 76 24 AA AA AA AA  
+    [RX] 11 02 36 25 2E 5C 64 72  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=37, len=256
+    [TX] 03 76 76 25 AA AA AA AA  
+    [RX] 11 02 36 26 61 F3 08 20  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=38, len=256
+    [TX] 03 76 76 26 AA AA AA AA  
+    [RX] 11 02 36 27 41 0C 20 69  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=39, len=256
+    [TX] 03 76 76 27 AA AA AA AA  
+    [RX] 11 02 36 28 22 A0 FE F7  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=40, len=256
+    [TX] 03 76 76 28 AA AA AA AA  
+    [RX] 11 02 36 29 21 A0 FE F7  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=41, len=256
+    [TX] 03 76 76 29 AA AA AA AA  
+    [RX] 11 02 36 2A 70 BD 00 00  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=42, len=256
+    [TX] 03 76 76 2A AA AA AA AA  
+    [RX] 11 02 36 2B 00 40 02 40  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=43, len=256
+    [TX] 03 76 76 2B AA AA AA AA  
+    [RX] 11 02 36 2C 20 88 C2 17  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=44, len=256
+    [TX] 03 76 76 2C AA AA AA AA  
+    [RX] 11 02 36 2D 01 21 13 48  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=45, len=256
+    [TX] 03 76 76 2D AA AA AA AA  
+    [RX] 01 37 00 00 00 00 00 00  <-- TransferExit
+    00> [FW] >>> OnTransferExit
+    00> [FW] Calculated CRC: 0x46CD7DA3
+    00> [FW] State: 3 -> 4
+    [TX] 03 7F 37 78 AA AA AA AA  
+    00> [FW] Verifying and writing firmware to Flash...
+    00> [FW] Flash write DISABLED (FW_FLASH_WRITE_ENABLED=0), skipping erase/write/verify
+    00> [FW] State: 4 -> 5
+    00> [FW] === Firmware Update Complete ===
+    00> [FW] Address: 0x08004000, Size: 11520 bytes ( KB)
+    00> [FW] Sectors erased: 0, Blocks written: 0
+    00> [FW] CRC: 0x46CD7DA3
+    [RX] 01 37 00 00 00 00 00 00  <-- TransferExit
+    00> [FW] >>> OnTransferExit
+    [TX] 01 77 AA AA AA AA AA AA  
+    [RX] 10 09 31 01 FE 01 44 10  <-- FF RoutineControl
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×1) ...
+    [TX] 03 71 71 01 AA AA AA AA  
+    [RX] 02 11 01 00 00 00 00 00  <-- ECUReset
+    [TX] 03 7F 11 12 AA AA AA AA  
+
+  ── 后续 2 次 (时间/行号) ──
+    第2次: 35.5s  行7946~9879
+    第3次: 48.9s  行9880~11813
+
+────────────────────────────────────────────────────────────────────────
+【模式 3】 出现 1 次
+  指纹: RX_0x10_SF → RX_0x50_SF → RX_0x27_SF → RX_0x67_SF → RX_0x27_SF → RX_0x67_SF → RX_0x31_FF → FC → RX_0x71_SF → RX_0x34_FF → FC → req_dl → wrong_state_dl → NRC_0x21 → RX_0x34_FF → FC → req_dl → wrong_state_dl → NRC_0x21 → RX_0x34_FF → FC → req_dl → wrong_state_dl → NRC_0x21 → RX_0x34_FF → FC → req_dl → wrong_state_dl → NRC_0x21 → RX_0x34_FF → FC → req_dl → wrong_state_dl → NRC_0x21 → RX_0x00_SF
+  时间: 27.89s ~ 287.24s  (跨度 259.4s)
+
+  ── 首次出现 (行 3808~3860) ──
+    [RX] 02 10 02 00 00 00 00 00  <-- Session:PROG
+    [TX] 02 50 02 AA AA AA AA AA  
+    [RX] 02 27 01 00 00 00 00 00  <-- ReqSeed
+    [TX] 06 67 01 12 34 56 78 AA  
+    [RX] 06 27 02 D0 99 A1 7B 00  <-- SendKey
+    [TX] 02 67 02 AA AA AA AA AA  
+    [RX] 10 0D 31 01 FE 00 00 08  <-- FF RoutineControl
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×1) ...
+    [TX] 03 71 71 01 AA AA AA AA  
+    [RX] 10 0B 34 00 44 08 00 40  <-- FF
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×1) ...
+    00> [FW] >>> OnRequestDownload: addr=0x08004000, size=11408 bytes
+    00> [FW] Wrong state for download: 5
+    [TX] 03 7F 34 21 AA AA AA AA  
+    [RX] 10 0B 34 00 44 08 00 40  <-- FF
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×1) ...
+    00> [FW] >>> OnRequestDownload: addr=0x08004000, size=11408 bytes
+    00> [FW] Wrong state for download: 5
+    [TX] 03 7F 34 21 AA AA AA AA  
+    [RX] 10 0B 34 00 44 08 00 40  <-- FF
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×1) ...
+    00> [FW] >>> OnRequestDownload: addr=0x08004000, size=11408 bytes
+    00> [FW] Wrong state for download: 5
+    [TX] 03 7F 34 21 AA AA AA AA  
+    [RX] 10 0B 34 00 44 08 00 40  <-- FF
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×1) ...
+    00> [FW] >>> OnRequestDownload: addr=0x08004000, size=11408 bytes
+    00> [FW] Wrong state for download: 5
+    [TX] 03 7F 34 21 AA AA AA AA  
+    [RX] 10 0B 34 00 44 08 00 40  <-- FF
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×1) ...
+    00> [FW] >>> OnRequestDownload: addr=0x08004000, size=11408 bytes
+    00> [FW] Wrong state for download: 5
+    [TX] 03 7F 34 21 AA AA AA AA  
+    [RX] 01 00 00 00 00 00 00 00  <-- Enable
+
+────────────────────────────────────────────────────────────────────────
+【模式 4】 出现 1 次
+  指纹: RX_0x10_SF → RX_0x50_SF → RX_0x27_SF → RX_0x67_SF → RX_0x27_SF → RX_0x67_SF → RX_0x31_FF → FC → RX_0x71_SF → RX_0x34_FF → FC → req_dl → wrong_state_dl → NRC_0x21 → RX_0x34_FF → FC → req_dl → wrong_state_dl → NRC_0x21 → RX_0x34_FF → FC → req_dl → wrong_state_dl → NRC_0x21 → RX_0x34_FF → FC → req_dl → wrong_state_dl → NRC_0x21 → RX_0x34_FF → FC → req_dl → wrong_state_dl → NRC_0x21 → req_dl → state_change → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x36_FF → FC → RX_0x76_SF → RX_0x37_SF → transfer_exit → crc → state_change → NRC_0x78 → verifying → write_disabled → state_change → complete → summary → RX_0x37_SF → transfer_exit → RX_0x77_SF → RX_0x31_FF → FC → RX_0x71_SF → RX_0x11_SF → NRC_0x12
+  时间: 12.83s ~ 294.47s  (跨度 281.6s)
+
+  ── 首次出现 (行 4017~6011) ──
+    [RX] 02 10 02 00 00 00 00 00  <-- Session:PROG
+    [TX] 02 50 02 AA AA AA AA AA  
+    [RX] 02 27 01 00 00 00 00 00  <-- ReqSeed
+    [TX] 06 67 01 12 34 56 78 AA  
+    [RX] 06 27 02 D0 99 A1 7B 00  <-- SendKey
+    [TX] 02 67 02 AA AA AA AA AA  
+    [RX] 10 0D 31 01 FE 00 00 08  <-- FF RoutineControl
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×1) ...
+    [TX] 03 71 71 01 AA AA AA AA  
+    [RX] 10 0B 34 00 44 08 00 40  <-- FF
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×1) ...
+    00> [FW] >>> OnRequestDownload: addr=0x08004000, size=11408 bytes
+    00> [FW] Wrong state for download: 5
+    [TX] 03 7F 34 21 AA AA AA AA  
+    [RX] 10 0B 34 00 44 08 00 40  <-- FF
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×1) ...
+    00> [FW] >>> OnRequestDownload: addr=0x08004000, size=11408 bytes
+    00> [FW] Wrong state for download: 5
+    [TX] 03 7F 34 21 AA AA AA AA  
+    [RX] 10 0B 34 00 44 08 00 40  <-- FF
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×1) ...
+    00> [FW] >>> OnRequestDownload: addr=0x08004000, size=11408 bytes
+    00> [FW] Wrong state for download: 5
+    [TX] 03 7F 34 21 AA AA AA AA  
+    [RX] 10 0B 34 00 44 08 00 40  <-- FF
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×1) ...
+    00> [FW] >>> OnRequestDownload: addr=0x08004000, size=11408 bytes
+    00> [FW] Wrong state for download: 5
+    [TX] 03 7F 34 21 AA AA AA AA  
+    [RX] 10 0B 34 00 44 08 00 40  <-- FF
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×1) ...
+    00> [FW] >>> OnRequestDownload: addr=0x08004000, size=11408 bytes
+    00> [FW] Wrong state for download: 5
+    [TX] 03 7F 34 21 AA AA AA AA  
+    00> [FW] === Flash Download Init Start ===
+    00> [FW] User flash range: 0x00014000 - 0x0007E000
+    00> [FW] Max firmware size: 256 KB
+    00> [FW] === Flash Download Init Done ===
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnRequestDownload: addr=0x08004000, size=11408 bytes
+    00> [FW] State: 0 -> 2
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=1, len=256
+    00> [FW] State: 2 -> 3
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=2, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=3, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=4, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=5, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=6, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=7, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=8, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=9, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=10, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=11, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=12, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=13, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=14, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=15, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=16, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=17, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=18, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=19, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=20, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=21, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=22, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=23, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=24, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    00> [FW] >>> OnTransferData: seq=25, len=256
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    ... (CF 数据帧 ×29) ...
+    00> [FW] >>> OnTransferData: seq=26, len=256
+    [TX] 03 76 76 1A AA AA AA AA  
+    [RX] 11 02 36 1B 18 80 FF 1F  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=27, len=256
+    [TX] 03 76 76 1B AA AA AA AA  
+    [RX] 11 02 36 1C 01 28 00 D1  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=28, len=256
+    [TX] 03 76 76 1C AA AA AA AA  
+    [RX] 11 02 36 1D 00 BF 00 BF  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=29, len=256
+    [TX] 03 76 76 1D AA AA AA AA  
+    [RX] 11 02 36 1E 09 A0 FE F7  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=30, len=256
+    [TX] 03 76 76 1E AA AA AA AA  
+    [RX] 11 02 36 1F 20 48 00 88  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=31, len=256
+    [TX] 03 76 76 1F AA AA AA AA  
+    [RX] 11 02 36 20 B3 FE 00 BF  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=32, len=256
+    [TX] 03 76 76 20 AA AA AA AA  
+    [RX] 11 02 36 21 FD 48 84 42  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=33, len=256
+    [TX] 03 76 76 21 AA AA AA AA  
+    [RX] 11 02 36 22 81 08 00 98  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=34, len=256
+    [TX] 03 76 76 22 AA AA AA AA  
+    [RX] 11 02 36 23 61 F3 DF 70  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=35, len=256
+    [TX] 03 76 76 23 AA AA AA AA  
+    [RX] 11 02 36 24 9D F8 03 10  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=36, len=256
+    [TX] 03 76 76 24 AA AA AA AA  
+    [RX] 11 02 36 25 2E 5C 64 72  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=37, len=256
+    [TX] 03 76 76 25 AA AA AA AA  
+    [RX] 11 02 36 26 61 F3 08 20  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=38, len=256
+    [TX] 03 76 76 26 AA AA AA AA  
+    [RX] 11 02 36 27 41 0C 20 69  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=39, len=256
+    [TX] 03 76 76 27 AA AA AA AA  
+    [RX] 11 02 36 28 22 A0 FE F7  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=40, len=256
+    [TX] 03 76 76 28 AA AA AA AA  
+    [RX] 11 02 36 29 21 A0 FE F7  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=41, len=256
+    [TX] 03 76 76 29 AA AA AA AA  
+    [RX] 11 02 36 2A 70 BD 00 00  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=42, len=256
+    [TX] 03 76 76 2A AA AA AA AA  
+    [RX] 11 02 36 2B 00 40 02 40  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=43, len=256
+    [TX] 03 76 76 2B AA AA AA AA  
+    [RX] 11 02 36 2C 20 88 C2 17  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=44, len=256
+    [TX] 03 76 76 2C AA AA AA AA  
+    [RX] 11 02 36 2D 01 21 13 48  <-- FF TransferData
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×36) ...
+    00> [FW] >>> OnTransferData: seq=45, len=256
+    [TX] 03 76 76 2D AA AA AA AA  
+    [RX] 01 37 00 00 00 00 00 00  <-- TransferExit
+    00> [FW] >>> OnTransferExit
+    00> [FW] Calculated CRC: 0x46CD7DA3
+    00> [FW] State: 3 -> 4
+    [TX] 03 7F 37 78 AA AA AA AA  
+    00> [FW] Verifying and writing firmware to Flash...
+    00> [FW] Flash write DISABLED (FW_FLASH_WRITE_ENABLED=0), skipping erase/write/verify
+    00> [FW] State: 4 -> 5
+    00> [FW] === Firmware Update Complete ===
+    00> [FW] Address: 0x08004000, Size: 11520 bytes ( KB)
+    00> [FW] Sectors erased: 0, Blocks written: 0
+    00> [FW] CRC: 0x46CD7DA3
+    [RX] 01 37 00 00 00 00 00 00  <-- TransferExit
+    00> [FW] >>> OnTransferExit
+    [TX] 01 77 AA AA AA AA AA AA  
+    [RX] 10 09 31 01 FE 01 44 10  <-- FF RoutineControl
+    00> [OTA] FF: response_id=0x18DAF103
+    00> [OTA] FC: dst_id=0x18DAF103 bs=0 stmin=5
+    [TX] 30 00 05 AA AA AA AA AA  
+    ... (CF 数据帧 ×1) ...
+    [TX] 03 71 71 01 AA AA AA AA  
+    [RX] 02 11 01 00 00 00 00 00  <-- ECUReset
+    [TX] 03 7F 11 12 AA AA AA AA  
+
+
+========================================================================
+  统计摘要
+========================================================================
+
+  行数统计:
+    总行数:      11,813
+    CF 数据帧:   7,876
+    SF/FF/FC:    369/269/269
+    TX/RX:       589/8194
+
+  下载周期:
+    总计:        10
+    不同模式:    4
+    成功完成:    6
+    状态错误DL:  35
+    状态错误Exit:0
+    TransferData: 268
+    TransferExit: 12
+
+  NRC 负响应统计:
+    0x21 (busyRepeatRequest): 35
+    0x78 (responsePending): 6
+    0x12 (subFunctionNotSupported): 6
+
+  RX UDS 服务:
+    0x00 (): 1
+    0x10 (SessionControl): 10
+    0x11 (ECUReset): 6
+    0x27 (SecurityAccess): 20
+    0x31 (RoutineControl): 16
+    0x34 (RequestDownload): 38
+    0x36 (TransferData): 215
+    0x37 (RequestTransferExit): 12
+
+  TX UDS 正响应:
+
+  模式分布:
+    [1]  5次  █████
+    [2]  3次  ███
+    [3]  1次  █
+    [4]  1次  █
