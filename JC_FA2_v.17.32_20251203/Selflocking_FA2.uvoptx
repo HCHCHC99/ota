@@ -158,7 +158,40 @@
           <Name>UL2CM3(-S0 -C0 -P0 -FD1FFF8000 -FC1000 -FN2 -FF0HC32F46x -FS00 -FL0200000 -FF1HC32F46x_otp -FS13000C00 -FL13FC -FP0($$Device:HC32F460JETA$FlashARM\HC32F46x.FLM) -FP1($$Device:HC32F460JETA$FlashARM\HC32F46x_otp.FLM))</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint/>
+      <Breakpoint>
+        <Bp>
+          <Number>0</Number>
+          <Type>0</Type>
+          <LineNumber>647</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>33420</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>.\USER\UDS\isotp_transport.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\Selflocking_FA2\USER/UDS/isotp_transport.c\647</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>787</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>33920</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>.\USER\UDS\isotp_transport.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\Selflocking_FA2\USER/UDS/isotp_transport.c\787</Expression>
+        </Bp>
+      </Breakpoint>
       <WatchWindow1>
         <Ww>
           <count>0</count>
@@ -235,12 +268,12 @@
         <Ww>
           <count>2</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ctrl</ItemText>
+          <ItemText>out_data,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>2</WinNumber>
-          <ItemText>s_filter_watch </ItemText>
+          <ItemText>out_len,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
@@ -271,6 +304,11 @@
           <count>9</count>
           <WinNumber>2</WinNumber>
           <ItemText>s_filter_record_index</ItemText>
+        </Ww>
+        <Ww>
+          <count>10</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>s_isotp_conn</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>
