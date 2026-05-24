@@ -3,6 +3,7 @@ template/MDK/output/
 *.dep
 *.uvgui*
 *.uvguix*
+*.uvoptx
 JLinkLog.txt
 *.Administrator
 *.CrApplication
