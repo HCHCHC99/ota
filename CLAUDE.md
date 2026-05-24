@@ -46,8 +46,9 @@ USER/
 - **System state machine**: `USER/system/sys_main_state.c` — `SystemContext` struct (`g_sys_ctx`) cycles through `SYS_STATE_INIT → POWER_SAMPLE → HALL_SAMPLE → MOTOR_CMD → MOTOR_PROTECT → POWER_SAMPLE`; faults trigger two-tier protection (primary delay then secondary reset after 10 consecutive faults)
 - **Device registry**: `USER/system/device_manager.c` — register-based abstraction for PWM, Flash, Timer devices
 - **CAN vehicle messages**: `USER/system/canJ1939.c` — receives CAN motor commands (up/down/stop/goto/reset/clrfault); CAN adapter layer in `USER/adapter/can_adapter.c/h` wraps DDL CAN APIs with ring-buffer RX/TX
-- **Modbus slave**: `USER/msg/msgHandler.c` + `USER/msg/modbus.c` — UART Modbus RTU register access
-- **UDS firmware download**: See UDS stack section below
+- **Modbus slave**: `USER/msg/msgHandler.c` + `USER/msg/modbus.c` — UART Modbus RTU register access; `USER/msg/queue.c` provides FIFO queue used by message handling
+- **CANopen**: `USER/CanOpen/co.c` + `co_sdo.c` — CANopen protocol stack (NMT, SDO)
+- **UDS firmware download**: See UDS stack section below; initialization calls `FlashDownload_Init()` → `isotp_init(CAN1)` → `uds_dl_init_fw()` in sequence before the main loop (`main.c:1788-1797`)
 
 ### Key Hardware Configuration (mc_config.h)
 
@@ -138,6 +139,31 @@ uint32_t g_uds_rx_can_id;
 
 The `ISOTP_AUTO_FC` block is now **disabled** (`isotp_transport.h:53` — commented out with `// #define ISOTP_AUTO_FC`). All frames go through the normal ISO-TP reassembly path.
 
+### 1ms Timer ISR (Critical for UDS Timing)
+
+`Timer01B_CallBack()` in `system.c:3680` runs every 1ms from Timer0 channel B. It drives:
+- `system_Timer_Task()` — system state machine tick
+- `tickTimer_Update()` — global millisecond counter
+- `uds_ms_update()` — session timeout countdown (default 65535ms); when expired, resets to DEFAULT session and clears security. Also counts down `security_delay_ms` after max failed unlock attempts.
+- `isotp_ms_update()` — RX timeout detection (resets partial reassembly on timeout), STmin delay counting for TX consecutive frames, TX timeout detection
+
+### NRC 0x78 Polling Pattern (0x37 TransferExit)
+
+The 0x37 handler doesn't send the final positive response immediately. Instead:
+1. `FlashDownload_OnTransferExit()` sets `pending_response = true` → UDS handler calls `uds_send_response_pending()` → sends NRC 0x78 ("Response Pending")
+2. `FlashDownload_Task()` (main loop) performs deferred erase/write/verify → sets `pending_response = false`
+3. Tester polls by resending 0x37; this time `is_pending()` returns false → positive response `0x77` is sent
+
+This is standard ISO 14229 behavior for long-running operations.
+
+### PRINTF_BIN Magic Trigger
+
+During 0x36 TransferData, `flash_download.c` watches for magic bytes `{0x12, 0x34, 0x56, 0x78, 0x12, 0x34, 0x56, 0x78}` in the data stream. When detected, the entire RAM buffer content is dumped as hex via SEGGER RTT. This is the mechanism `extract_fw.py` uses to extract firmware from the ECU log (`ota data4.txt`).
+
+### Download Interface Registration
+
+`uds_dl_init_fw()` in `uds_dl_bridge.c` is the explicit registration call that connects the UDS layer to the flash download implementation. It calls `uds_dl_register(&g_firmware_download_iface)`, setting the global `g_dl_iface` pointer. UDS handlers access the flash engine exclusively through this function pointer table (`uds_dl_if.h`), never calling `FlashDownload_*()` functions directly.
+
 ## Python Tools (in firmware root)
 
 **Run**: `py <script>.py` from `JC_FA2_v.17.33_20251203/`. All scripts read paths from variables at the top of each file — edit the `# ========== 路径配置 ==========` section to change input/output files. `app1.bin` and `app2.bin` are read from the same directory by default.
@@ -184,8 +210,19 @@ app1.bin ────────[hexdump.py]──────> app1_bin.txt
 - **Compile-time protocol selection**: Source conditionally compiles Modbus vs CAN paths via `#if (PROTOCOL_TYPE == MODBUS_PROTOCOL)` / `#elif (PROTOCOL_TYPE == CAN_PROTOCOL)`
 - **Interface decoupling**: `uds_dl_if.h` defines a function pointer table; `uds_dl_bridge.c` registers the flash download implementation. UDS layer never directly calls FlashDownload functions — enables swapping implementations without touching protocol code.
 
-### Logging
+### Debugging (J-Link + SEGGER RTT)
 
-- Debug output via SEGGER RTT (`RTT/rtt_log.h` — macros `LOG_CH`, `LOG_LEVEL_DEBUG`, etc.) over J-Link
-- OTA frame logs in firmware root: `ota data.txt`, `ota data3.txt`, `ota data4.txt` (formatted as `seq=N, [RX/TX] CAN_ID, hex_bytes`)
-- USART1 debug output: voltage/current telemetry every 2s (when `hz_usart1_debug` enabled)
+- **Hardware debugger**: J-Link via SWD interface
+- **SEGGER RTT**: Real-time debug output over J-Link (no UART needed). Configuration in `RTT/SEGGER_RTT_Conf.h`
+  - RTT Channel 0: main log output
+  - Log macros in `RTT/rtt_log.h`: `LOG_CH(channel, level, color, module, fmt, ...)` 
+  - Multi-module channels: LOG_CH_MAIN(0), LOG_CH_USB(1), LOG_CH_SENSOR(2), LOG_CH_MOTOR(3), LOG_CH_COMM(4), LOG_CH_UI(5)
+  - Log levels: DEBUG(0), INFO(1), WARN(2), ERROR(3), FATAL(4) with ANSI color codes
+  - View with J-Link RTT Viewer or J-Link RTT Client
+- **OTA frame logs** in firmware root: `ota data.txt`, `ota data3.txt`, `ota data4.txt` (formatted as `seq=N, [RX/TX] CAN_ID, hex_bytes` with UDS annotation)
+- **USART1 debug output**: voltage/current telemetry every 2s (when `hz_usart1_debug` enabled)
+- **VS Code IntelliSense**: `.vscode/c_cpp_properties.json` configures include paths for HC32F46x + CMSIS for code browsing outside Keil. Compiler set to `armcc.exe` at `C:/Keil_v5/ARM/ARMCC/bin/`
+
+### Pin Definitions
+
+All GPIO/ADC/UART pin assignments are in `USER/main.h` (lines 28-118): LED ports, button inputs, limit switches, PWM output pins, pre-drive pins, ADC channels (voltage, current, temperature, potentiometer), RS-485 DIR pin, USART3 pins. Motor-specific pin configs are in `USER/MotorControl/mc_config.h`.
