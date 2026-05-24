@@ -3,7 +3,7 @@
 
 *����: Yuchen Tan
 
-*�汾: V1.0.0
+*���: V1.0.0
 
 *���ܼ��:
 
@@ -53,7 +53,7 @@
 *��ע: ���ļ���,��ϣ�����ⲿʹ�û������޸ĵĺ������ﶨ��
 *
 *****************************************************************************/
-/*�����汾*/
+/*�������*/
 #define SW_VERSION				(1)
 #define SW_MINI_VERSION			(1)
 
@@ -113,7 +113,7 @@
 #define COLUMN_POS_MEMORY4      (7)     //����λ��4
 #define COLUMN_POS_NB           (8)
 
-/*FLASH�洢��־λ*/
+/*FLASH�����־λ*/
 #define FS_MOTOR_SATE           (0x01)
 #define FS_MOTOR_LIMIT          (0x02)
 #define FS_SYS_PARAM			(0x08)
@@ -122,12 +122,12 @@
 #define	FS_BOOT_CONFIG			(0x40)
 
 
-/*FLASH�洢������*/
+/*FLASH���������*/
 #define FSA_MOTOR_STATE         BLOCK_L1_ADDR   //����λ��
 #define FSA_MOTOR_LIMIT         BLOCK_L2_ADDR   //������λ
-#define FSA_SYS_PARAM     		BLOCK_L3_ADDR   //�洢ϵͳ����(CanOpen�ڵ���Ϣ)
+#define FSA_SYS_PARAM     		BLOCK_L3_ADDR   //���ϵͳ����(CanOpen�ڵ���Ϣ)
 
-/*ģ�麯����������ֵ����*/
+/*ģ��D����������ֵ����*/
 #define	MSG_RET_OK			(1)
 #define	MSG_RET_ERR_MA		(-1)	//�ڴ����ʧ��
 #define	MSG_RET_ERR_PARAM	(-2)	//�ӿڲ�������
@@ -250,7 +250,7 @@ typedef enum
 //  E_CANCEL_LIMIT_POS,
 }SETPOS_TYPE_t;
 
-/*ϵͳ����״̬�ṹ�嶨��*/
+/*ϵͳ����״̬�ṹ��G��*/
 typedef struct
 {
     float           ModbusColumnPos;    //�Ƹ�Ŀ��λ��
@@ -294,15 +294,15 @@ typedef struct
 	/* ��ѹ��־λ�͹�ѹ����ֵ */
 	uint8_t			OVVFlag;
 	uint16_t		OVVCount;
-	/* ���籣��flash��־ */
+	/* ����_��flash��־ */
 	uint16_t		PowerDownSaveFlash;
-	/* �ϵ縴λ��־λ */
+	/* �ϵ�yλ��־λ */
 	uint8_t 		PowerOnResetFlag;
 	uint8_t			MotorLockedRotor;    
 }SYSTEM_t;
 
-/*ɲ��״̬�ṹ�嶨��*/
-float Brake_Store_Pos; //ɲ������ʱ�Ƹ��Ѵ洢��λ��
+/*ɲ��״̬�ṹ��G��*/
+float Brake_Store_Pos; //ɲ������ʱ�Ƹ��Ѵ����λ��
 float Current_Pos;//ɲ������ʱ�Ƹ�ʵʱ��λ��
 float Brake_Pos_1;//��е����1mm
 uint8_t Brake_State;  //ɲ��״̬  // 1 ����λ�ͼ����֮�䣻2 ����λ�ͼ����֮�䣻
@@ -673,7 +673,7 @@ void system_Communication_Motor_Init(void)
         return;
     if(System.SysCon.Sys_CommunicationType == E_MODBUS)
     {
-        /*��ʼ������洢�ĵ�����Ʋ���*/
+        /*��ʼ���������ĵ�����Ʋ���*/
         flash_adapter_Read(WORD, FSA_SYS_PARAM, WORD, Data, 3);
         if(Data[0] == 0xAA55)
         {
@@ -694,14 +694,14 @@ void system_Communication_Motor_Init(void)
         CO_SET_OD(OD_SI_BAUDRATE, 2);	//0-1M, 1-500k, 2-250k, 3-125k(��δʵ���޸Ĳ����ʵĹ���)
         System.CanCmd = e_can_none;
         
-        /*��ʼ������洢�ĵ�����Ʋ���*/
+        /*��ʼ���������ĵ�����Ʋ���*/
         flash_adapter_Read(WORD, FSA_SYS_PARAM, WORD, Data, 5);
         if(Data[0] == 0xAA55)
         {
             Check = Data[0] + Data[1] + Data[2] + Data[3];
             if(Check == Data[4])
             {
-                ColumnSpdMMPS = (float)Data[1] / 10.0f;		//flash�Ͷ����ֵ��д洢���ٶȵ�λ:1=0.1mm/s
+                ColumnSpdMMPS = (float)Data[1] / 10.0f;		//flash�Ͷ����ֵ��д�����ٶȵ�λ:1=0.1mm/s
                 System.MotorSpeed = system_Modify_Column_Speed(0, ColumnSpdMMPS);
                 sCONode.HeartBeatMs = Data[2];
                 sCONode.NodeID = Data[3];
@@ -1548,7 +1548,7 @@ void system_Set_Fault_Signal(void)
 //    }else
 //        gpio_adapter_Reset_Pin(FAULT_GPIO_Port, FAULT_Pin);
 }
-/*ϵͳ�ź����-���ת��(HALL��ƽ״̬�仯ʱ����)*/
+/*ϵͳ�ź����-���ת��(HALL��ƽ״̬���ʱ����)*/
 void system_Set_MotorSpd_Signal(void)
 {
 //  gpio_adapter_Toggle_Pin(GPIO_MOTOR_SPEED_PORT, GPIO_MOTOR_SPEED_PIN);
@@ -1559,7 +1559,7 @@ void system_Read_MotorSpd_Regulator_Signal(void)
 //  static float HYS_Voltage = 0.05;    //���͵�ѹ(��λ:V)
 //  static int16_t  s_ADData_MSR_Temp = 0;
 //  int16_t ADData_MSR = 0;
-//  int16_t ADData_HYS = 0;     //�仯����
+//  int16_t ADData_HYS = 0;     //�������
 //
 //  /*��ѹ����*/
 //  if(1 == adc_adapter_SCM_1Ch_Convert(ADCH_MSPD_ADCH))
@@ -1685,8 +1685,8 @@ void system_Update_MBReg(void)
     uint8_t Motor_Fault = 0;
     float Motor_PosMM = 0;
     float Motor_Spd_mmps = 0;
-    /*�����豸ʵ��״̬,����modbus�Ĵ�����*/
-    //MBREG_MOTOR_SLAVE_ADDR       ���豸��ַ(RW)
+    /*�������ʵ��״̬,����modbus�Ĵ�����*/
+    //MBREG_MOTOR_SLAVE_ADDR       �������ַ(RW)
     modbus_Write_1Reg(g_KVPTable, MBREG_MOTOR_SLAVE_ADDR, hModbusLink.SlaveAddr);
     
     //  MBREG_MOTOR_STATE             //���״̬(R)
@@ -1749,7 +1749,7 @@ void system_Signal_LoopTask(void)
 /********************************��������************************************
 *������:
 
-*������������: ϵͳ����-ϵͳ��������flash�洢
+*������������: ϵͳ����-ϵͳ��������flash���
 
 *��������: ��
 
@@ -1963,7 +1963,7 @@ void system_ConfigInit_Handler(void* System)
 			SYSTEM_SET_FLAG(pSystem->SaveIntoFlash, FS_SYS_CONFIG);
 			SYSTEM_SET_FLAG(pSystem->SaveIntoFlash, FS_MOTOR_CONFIG);
 			SYSTEM_SET_FLAG(pSystem->SaveIntoFlash, FS_BOOT_CONFIG);
-			/*�洢flash����*/
+			/*���flash����*/
 			(void)system_Save_Flash(pSystem, (FS_SYS_CONFIG | FS_MOTOR_CONFIG | FS_BOOT_CONFIG));
 			sys_cfg_Controller();/*�˳�����ģʽ��ʾ*/
 			hSystemFlagCfg->PerameterSetMode = E_IDLEMODESET;
@@ -2061,7 +2061,7 @@ void system_Init_Handler(void* System)
 				pSystem->ZeroFound = 1;
 			}
 			flash_adapter_Erase(PAGE, FSA_MOTOR_STATE, 1);
-			SYSTEM_SET_FLAG(pSystem->SaveIntoFlash, FS_MOTOR_SATE);	/* ����״̬��Ҳ��Ҫ���ù��Ϻ��г̱����־����֤��ε����Ժ��ϵ绹����֮ǰ�Ĺ��ϴ��� */
+			SYSTEM_SET_FLAG(pSystem->SaveIntoFlash, FS_MOTOR_SATE);	/* ����״̬��Ҳ��Ҫ���ù��Ϻ��г̱����־����֤��ε����Ժ��ϵ������֮ǰ�Ĺ��ϴ��� */
             system_FSM_StateJump(pSystem, E_SYS_STATE_IDLE);
         }
     }
@@ -2225,7 +2225,7 @@ void system_Idle_Handler(void* System)
 	{
 		system_FSM_StateJump(pSystem, E_SYS_STATE_FAULT);
 	}
-    /*�洢flash����*/
+    /*���flash����*/
 //	(void)system_Save_Flash(pSystem, (FS_MOTOR_SATE | FS_MOTOR_LIMIT | FS_SYS_PARAM ));
     
 	if(pSystem->ZeroFound == 1)
@@ -2294,7 +2294,7 @@ void system_MotorRun_Handler(void* System)
 		{
 			pSystem->Step++;
             /*�������*/
-			flash_adapter_Erase(PAGE, FSA_MOTOR_STATE, 1);    //����ʱ�����Ѵ洢��λ��
+			flash_adapter_Erase(PAGE, FSA_MOTOR_STATE, 1);    //����ʱ�����Ѵ����λ��
 			system_Motor_Move(MOTOR1, e_mac_start_closeloop, pSystem->RunDir);
 		}
 		btn_Clr_Event(KEY_MOTOR_UP);
@@ -2419,21 +2419,21 @@ void system_MotorRun_Handler(void* System)
 		system_Communication_None();  //��λ������ָ��
 	}else
 	{
-		/*ͨѶ����仯-���е�Ŀ��λ��*/
+		/*ͨѶ������-���е�Ŀ��λ��*/
 		if(system_Communication_Goto() == 1)
 		{
 			//pSystem->ModbusCmd = e_cmc_none;		�����ModbusCanCmd����(����),��ϵͳ����IDLE״̬�����Ӧ������
 			if(pSystem->Step < 100)
 				pSystem->Step = 100;
 		}
-		/*ͨѶ����仯-ֹͣ*/
+		/*ͨѶ������-ֹͣ*/
 		if(system_Communication_Stop() == 1)
 		{
 			system_Communication_None();
 			if(pSystem->Step < 100)
 				pSystem->Step = 100;
 		}		
-		/*ͨѶ����仯-����/�½�*/
+		/*ͨѶ������-����/�½�*/
 		else if(((system_Communication_Down() ==1) && pSystem->RunDir == DIR_UP) || \
 				((system_Communication_Up() == 1) && pSystem->RunDir == DIR_DOWN))
 		{
@@ -2471,13 +2471,13 @@ void system_MotorGotoPos_Handler(void* System)
         if(pSystem->GotoHallPos + 10 < ReadParam[0])
         {
             pSystem->RunDir = DIR_DOWN;
-			flash_adapter_Erase(PAGE, FSA_MOTOR_STATE, 1);    //����ʱ�����Ѵ洢��λ��
+			flash_adapter_Erase(PAGE, FSA_MOTOR_STATE, 1);    //����ʱ�����Ѵ����λ��
             mc_app_Set_Single_Motor_Cmd(MOTOR1, e_mac_goto_targetpos, pSystem->GotoHallPos);
             pSystem->Step = 2;
         }else if(pSystem->GotoHallPos > ReadParam[0] + 10)
         {
             pSystem->RunDir = DIR_UP;		
-			flash_adapter_Erase(PAGE, FSA_MOTOR_STATE, 1);    //����ʱ�����Ѵ洢��λ��
+			flash_adapter_Erase(PAGE, FSA_MOTOR_STATE, 1);    //����ʱ�����Ѵ����λ��
             mc_app_Set_Single_Motor_Cmd(MOTOR1, e_mac_goto_targetpos, pSystem->GotoHallPos);
             pSystem->Step = 2;
         }else
@@ -2605,7 +2605,7 @@ void system_MotorGotoPos_Handler(void* System)
 		system_Communication_None(); //��λ������ָ��		
 	}else
 	{
-		/*ͨѶ����仯-Ŀ��λ�ø���*/
+		/*ͨѶ������-Ŀ��λ�ø���*/
 		if(system_Communication_Goto() == 1)
 		{
 			system_Communication_None(); //��λ������ָ��
@@ -2615,14 +2615,14 @@ void system_MotorGotoPos_Handler(void* System)
 				pSystem->GotoHallPos = system_Communication_Updategotopos();
 			}
 		}
-		/*ͨѶ����仯-ֹͣ*/
+		/*ͨѶ������-ֹͣ*/
 		else if(system_Communication_Stop() == 1)
 		{
 			system_Communication_None(); //��λ������ָ��
 			if(pSystem->Step < 100)
 				pSystem->Step = 100;
 		}
-		/*ͨѶ����仯-����/�½�*/
+		/*ͨѶ������-����/�½�*/
 		else if(((system_Communication_Down() ==1) && pSystem->RunDir == DIR_UP) || \
 				((system_Communication_Up() == 1) && pSystem->RunDir == DIR_DOWN))
 		{
@@ -2683,12 +2683,12 @@ void system_Fault_Handler(void* System)
         {
 			pSystem->RunDir = DIR_STOP;
             SYSTEM_CLR_FLAG(pSystem->MotorFlag, M1_MOVE | M2_MOVE);
-            /*�洢flash����*/
+            /*���flash����*/
 			pSystem->Step++;
         }
     }else if(pSystem->Step == 1)
 	{
-		/*�ж��Ƿ���磬���ǵ���ģʽ�����Ƿ��������*/
+		/*�ж��Ƿ��������ǵ���ģʽ�����Ƿ��������*/
 		if(pSystem->BusVoltageMV  < POWER_DOWN_SAVE_FLASH)
 		{
 			system_Communication_None();
@@ -2722,7 +2722,7 @@ void system_Fault_Handler(void* System)
 			}
 		}
 	}
-	/*��ѹ����10v�ж�Ϊ���翪ʼ��flash*/
+	/*��ѹ����10v�ж�Ϊ����Cʼ��flash*/
 	if(pSystem->PowerDownSaveFlash  == 1)
 	{	
 		pSystem->PowerDownSaveFlash  = 0;
@@ -2769,7 +2769,7 @@ void system_Settings_Handler(void* System)
 //          SYSTEM_SET_FLAG(pSystem->SaveIntoFlash, FS_MOTOR_MEMORYPOS);
 //          pSystem->MemoryPosSetFlag |= (1 << (SaveFlag - E_SET_MEMORY_POS_1));
 //      }
-//      /*����λ�ô洢��flash*/
+//      /*����λ�ô����flash*/
 //      if(system_Save_Flash(pSystem, FS_MOTOR_MEMORYPOS))
 //      {
 //          timer_Set_SW_Timer_AlarmTime(SW_TIMER_0, 1000);//������ɺ�,��ʱ��ʾ1s
@@ -2877,7 +2877,7 @@ int8_t system_msgHandler_MB_AppCB03(uint8_t* RcvData, uint8_t Len)
     {
         switch(RegAddr)
         {
-            //���豸��ַ
+            //�������ַ
             case MBREG_MOTOR_SLAVE_ADDR:
                 modbus_Write_1Reg(g_KVPTable, MBREG_MOTOR_SLAVE_ADDR, hModbusLink.SlaveAddr);
                 break;
@@ -2982,7 +2982,7 @@ int8_t system_msgHandler_MB_AppCB(uint8_t* RcvData, uint8_t Len)
         RegValue = (RcvData[RegValueStart] << 8) | RcvData[RegValueStart + 1];
         switch(RegAddr)
         {
-            //���豸��ַ
+            //�������ַ
             case MBREG_MOTOR_SLAVE_ADDR:
                 if((RegValue >= 0) && (RegValue < 128))
                 {

@@ -1797,7 +1797,7 @@ int32_t main(void)
     uds_dl_init_fw();  // ×¢²á¹Ì¼şÏÂÔØ½Ó¿Ú
     while(1)
     {
-        /* UDSå¼‚æ­¥æ¥æ”¶: CAN ISRå­˜æ•°æ®åˆ°å…¨å±€ç¼“å†²åŒºå¹¶ç½®æ ‡å¿—, ä¸»å¾ªç¯å¤„ç† */
+        /* UDSÒì²½½ÓÊÕ: CAN ISR´æÊı¾İµ½È«¾Ö»º³åÇø²¢ÖÃ±êÖ¾, Ö÷Ñ­»·´¦Àí */
         if (g_uds_rx_pending)
         {
             uds_receive_handler(CAN1, g_uds_rx_can_id, g_uds_rx_buffer, g_uds_rx_len);

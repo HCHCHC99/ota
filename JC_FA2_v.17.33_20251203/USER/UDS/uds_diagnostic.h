@@ -1,7 +1,7 @@
 /********************************�ļ�˵��*************************************
 *�ļ���: uds_diagnostic.h
 *����: AI Assistant
-*�汾: V1.0.0
+*���: V1.0.0
 *���ܼ��: UDS (ISO 14229) ͨ�����Э�� - ������״̬��
 *��ע: ֧�ֻỰ��������ȫ���ʡ����̿��ơ��̼�����
 *****************************************************************************/
@@ -131,7 +131,7 @@ typedef struct
     uint16_t session_timeout_ms;
     uint8_t max_attempts;
     
-    /* DID ���ݴ洢 */
+    /* DID ���ݴ�� */
     uint16_t firmware_version;
     uint16_t bootloader_version;
     uint32_t firmware_crc;
