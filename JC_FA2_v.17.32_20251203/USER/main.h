@@ -142,7 +142,7 @@
 #define CAN_RX_PIN				(Pin14)
 #define CAN_RX_FUNC				(Func_Can1_Rx)
 /* CAN中断配置*/
-#define CAN_IRQ_PRIORITY		(DDL_IRQ_PRIORITY_DEFAULT)	//Possible values are 0(high priority) to 15(low priority)
+#define CAN_IRQ_PRIORITY		(DDL_IRQ_PRIORITY_02)	//Possible values are 0(high priority) to 15(low priority)
 #define CAN_NUM					(INT_CAN_INT)
 #define CAN_RX_IRQN				(Int007_IRQn)
    
@@ -186,7 +186,7 @@
 #define M1_HALLC_EIRQ_NUM		(INT_PORT_EIRQ8)
 
 /*定时器-timer0(用于计时器)*/
-#define TIME0_IRQ_PRIORITY		(DDL_IRQ_PRIORITY_01)	//Possible values are 0(high priority) to 15(low priority)
+#define TIME0_IRQ_PRIORITY		(DDL_IRQ_PRIORITY_03)	//Possible values are 0(high priority) to 15(low priority)
 #define TIME0_IRQN          	(Int004_IRQn)
 #define TIME_GCM_NUM			(INT_TMR01_GCMB)
 /* USER CODE END Private defines */

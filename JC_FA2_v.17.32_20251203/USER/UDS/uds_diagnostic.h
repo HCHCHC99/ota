@@ -142,7 +142,7 @@ typedef struct
 void uds_init(void);
 void uds_ms_update(void);
 void uds_process(void);
-int8_t uds_receive_handler(uint8_t channel, uint32_t can_id, uint8_t* data, uint8_t len);
+int8_t uds_receive_handler(uint8_t channel, uint32_t can_id, uint8_t* data, uint16_t len);
 int8_t uds_send_response(uint8_t channel, uint8_t sid, uint8_t* data, uint8_t len);
 int8_t uds_send_negative_response(uint8_t channel, uint8_t sid, uint8_t nrc);
 int8_t uds_send_response_pending(uint8_t channel, uint8_t sid);

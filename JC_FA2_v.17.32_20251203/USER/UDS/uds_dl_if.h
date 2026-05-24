@@ -75,8 +75,8 @@ typedef struct
      * @return 处理结果
      */
     uds_dl_result_t (*on_transfer_data)(uint8_t block_sequence_number,
-                                         const uint8_t* data,
-                                         uint8_t len);
+	                                         const uint8_t* data,
+	                                         uint16_t len);
 
     /**
      * @brief 请求传输退出（对应 UDS 0x37）
