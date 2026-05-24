@@ -112,29 +112,37 @@ def find_best_offset(extracted, reference, search_start, search_range=0x10000):
     return best_offset
 
 
-def print_hex_diff(extracted, reference, ref_offset, max_lines=30):
-    """打印差异对比 (readbin.py 风格)"""
+def print_hex_diff(extracted, reference, ref_offset):
+    """打印差异对比 — 按16字节对齐行显示，差异字节标为 XX[YY]"""
     compare_len = min(len(extracted), len(reference) - ref_offset)
-    bytes_per_line = 16
     diff_count = 0
 
-    print("\n[DIFF] 差异详情 (前{}处):".format(max_lines))
-    print("偏移(提取)  提取Hex        参考Hex        差异Bit")
-    print("-" * 56)
-
+    # 按16字节对齐行收集所有差异的行号
+    rows_with_diff = set()
     for i in range(compare_len):
-        eb = extracted[i]
-        rb = reference[ref_offset + i]
-        if eb != rb:
+        if extracted[i] != reference[ref_offset + i]:
             diff_count += 1
-            if diff_count <= max_lines:
-                bit_err = count_bit_errors(eb, rb)
-                marker = ''.join('^' if (eb >> (7 - j)) & 1 != (rb >> (7 - j)) & 1 else ' '
-                                for j in range(8))
-                print(f"  {i:08X}     {eb:02X} {marker} {rb:02X}          {bit_err} bit(s)")
+            rows_with_diff.add(i >> 4)  # i // 16
 
-    if diff_count > max_lines:
-        print(f"  ... (共 {diff_count} 处差异，仅显示前 {max_lines} 处)")
+    print("\n[DIFF] 差异详情 (全部):")
+    print("-" * 78)
+
+    for row in sorted(rows_with_diff):
+        row_start = row << 4
+        row_end = min(compare_len, row_start + 16)
+        parts = []
+        for j in range(row_start, row_end):
+            if extracted[j] != reference[ref_offset + j]:
+                parts.append(f"{extracted[j]:02X}[{reference[ref_offset + j]:02X}]")
+            else:
+                parts.append(f"{extracted[j]:02X}")
+        line = ' '.join(parts)
+        print(f"  {row_start:08X}: {line}")
+
+    if diff_count == 0:
+        print("  (无差异 — 完全匹配)")
+    else:
+        print(f"\n  --- 共 {diff_count} 处差异 ---")
 
 
 def main():
