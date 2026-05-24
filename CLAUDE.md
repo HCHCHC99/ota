@@ -140,16 +140,36 @@ The `ISOTP_AUTO_FC` block is now **disabled** (`isotp_transport.h:53` — commen
 
 ## Python Tools (in firmware root)
 
-All scripts read paths from variables at the top of each file — edit the `# ========== 路径配置 ==========` section to change input/output files. `app1.bin` and `app2.bin` are read from the same directory by default.
+**Run**: `py <script>.py` from `JC_FA2_v.17.33_20251203/`. All scripts read paths from variables at the top of each file — edit the `# ========== 路径配置 ==========` section to change input/output files. `app1.bin` and `app2.bin` are read from the same directory by default.
 
 | Tool | Purpose |
 |---|---|
 | `extract_fw.py` | Extract firmware binary from OTA log (`ota data4.txt`): parses PRINTF_BIN hex dumps or ISO-TP TransferData frames, outputs `extracted_firmware.txt` |
-| `compare_rec.py` | Bit error rate analysis: compares `extracted_firmware.txt` against `app1.bin` (or `app2.bin` via `REF_BIN`), reports bit/byte error rates, prints diff locations in `XX[YY]` format |
-| `compare_tbox.py` | Parse PCAN-View `.trc` trace, reassemble ISO-TP frames from TBOX CAN data, compare against `app1.bin`/`app2.bin` |
+| `compare_rec.py` | Bit error rate analysis: compares `extracted_firmware.txt` against `app1.bin` (or `app2.bin` via `REF_BIN`), reports bit/byte error rates, prints diff locations in `XX[YY]` format, plus per-bit error stats and byte-level mapping analysis |
+| `compare_tbox.py` | Parse PCAN-View `.trc` trace, reassemble ISO-TP frames from TBOX CAN data, compare against `app1.bin`/`app2.bin` (via `REF_BIN`). Same error analysis as `compare_rec.py` |
 | `hexdump.py` | Convert `app1.bin` and `app2.bin` to aligned hex dump `.txt` files (16 bytes/row, 8+8 grouping) |
 | `bin_search.py` | Interactive binary viewer: hex dump with ASCII preview, string/hex pattern search with context display |
 | `security.py` | UDS Security Access (0x27) seed-to-key calculator: CRC8-based algorithm, 4-byte seed → 4-byte key for Level 1 unlock |
+
+### Key Data Files
+
+| File | Role |
+|---|---|
+| `app1.bin` / `app2.bin` | Reference firmware binaries (gitignored — `*.bin` in `.gitignore`) |
+| `true_data.trc` | PCAN-View CAN trace of TBOX firmware download (input to `compare_tbox.py`) |
+| `ota data4.txt` | ECU serial log with PRINTF_BIN hex dumps and OTA frames (input to `extract_fw.py`) |
+| `extracted_firmware.txt` | Firmware hex dump extracted from ECU log (output of `extract_fw.py`, input to `compare_rec.py`) |
+| `tbox_extracted_firmware.txt` | Firmware hex dump extracted from CAN trace (output of `compare_tbox.py`) |
+| `app1_bin.txt` / `app2_bin.txt` | Reference firmware hex dumps (output of `hexdump.py`) |
+| `Selflocking_FA2.bin` | Full firmware build output (gitignored) |
+
+### Typical Analysis Workflow
+
+```
+ota data4.txt ──[extract_fw.py]──> extracted_firmware.txt ──[compare_rec.py]──> 误码率 + Bit统计 + 字节映射
+true_data.trc ──[compare_tbox.py]──> 误码率 + Bit统计 + 字节映射
+app1.bin ────────[hexdump.py]──────> app1_bin.txt
+```
 
 ## Root-Level File
 
