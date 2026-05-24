@@ -1,6 +1,14 @@
 import os
 import binascii
 
+# ========== 配置区域 - 请在这里修改文件路径 ==========
+# app1.bin 文件路径（请修改为实际路径）
+APP1_BIN_PATH = r"F:\Enterprise WeChat\WXWork\1688858205719851\Cache\File\2026-04\app1.bin"
+
+# app2.bin 文件路径（请修改为实际路径）
+APP2_BIN_PATH = r"F:\Enterprise WeChat\WXWork\1688858205719851\Cache\File\2026-04\app2.bin"
+# =================================================
+
 def read_bin_to_formatted_hex(file_path, bytes_per_line=16):
     """读取二进制文件并返回格式化的十六进制显示"""
     try:
@@ -292,22 +300,41 @@ def display_file_content(file_data, file_name, max_lines=30):
     
     print("=" * 80)
 
+def check_file_exists(file_path, file_name):
+    """检查文件是否存在并显示信息"""
+    if os.path.exists(file_path):
+        size = os.path.getsize(file_path)
+        print(f"✓ {file_name}: 找到 (大小: {size} 字节)")
+        return True
+    else:
+        print(f"✗ {file_name}: 未找到 - {file_path}")
+        return False
+
 def main():
-    # app1.bin 路径
-    app1_path = r"D:\Bootloader_hc32f46x_v.1.26\HC32F460_app1\project\MDK\output\debug\app1.bin"
-    
-    # app2.bin 路径
-    app2_path = r"D:\Bootloader_hc32f46x_v.1.26\HC32F460_app2\project\MDK\output\debug\app2.bin"
-    
     print("=" * 80)
     print("二进制文件搜索工具 - 支持 app1.bin 和 app2.bin")
     print("=" * 80)
-    print(f"app1.bin 路径：{app1_path}")
-    print(f"app2.bin 路径：{app2_path}")
+    
+    # 显示配置信息
+    print("\n【当前文件配置】")
+    print(f"app1.bin 路径：{APP1_BIN_PATH}")
+    print(f"app2.bin 路径：{APP2_BIN_PATH}")
+    print("\n提示：如需修改路径，请编辑脚本开头的配置区域")
+    
+    # 检查文件是否存在
+    print("\n【检查文件】")
+    app1_exists = check_file_exists(APP1_BIN_PATH, "app1.bin")
+    app2_exists = check_file_exists(APP2_BIN_PATH, "app2.bin")
+    
+    if not app1_exists and not app2_exists:
+        print("\n错误：没有找到任何有效的文件！")
+        print("请修改脚本开头的 APP1_BIN_PATH 和 APP2_BIN_PATH 变量")
+        input("\n按 Enter 键退出...")
+        return
     
     # 加载两个文件
-    app1_data, app1_size = load_file(app1_path, "app1.bin")
-    app2_data, app2_size = load_file(app2_path, "app2.bin")
+    app1_data, app1_size = load_file(APP1_BIN_PATH, "app1.bin")
+    app2_data, app2_size = load_file(APP2_BIN_PATH, "app2.bin")
     
     # 检查是否有文件成功加载
     if app1_data is None and app2_data is None:
@@ -391,12 +418,12 @@ def main():
             
             if app1_data:
                 matches1, keyword_bytes1 = search_keyword_in_binary(app1_data, keyword)
-                if display_search_results(matches1, keyword, app1_data, keyword_bytes1, "app1.bin", app1_path, app1_size):
+                if display_search_results(matches1, keyword, app1_data, keyword_bytes1, "app1.bin", APP1_BIN_PATH, app1_size):
                     found_any = True
             
             if app2_data:
                 matches2, keyword_bytes2 = search_keyword_in_binary(app2_data, keyword)
-                if display_search_results(matches2, keyword, app2_data, keyword_bytes2, "app2.bin", app2_path, app2_size):
+                if display_search_results(matches2, keyword, app2_data, keyword_bytes2, "app2.bin", APP2_BIN_PATH, app2_size):
                     found_any = True
             
             if not found_any:
@@ -421,12 +448,12 @@ def main():
             
             if app1_data:
                 matches1, pattern_bytes1 = search_hex_pattern(app1_data, hex_pattern)
-                if display_search_results(matches1, hex_pattern, app1_data, pattern_bytes1, "app1.bin", app1_path, app1_size):
+                if display_search_results(matches1, hex_pattern, app1_data, pattern_bytes1, "app1.bin", APP1_BIN_PATH, app1_size):
                     found_any = True
             
             if app2_data:
                 matches2, pattern_bytes2 = search_hex_pattern(app2_data, hex_pattern)
-                if display_search_results(matches2, hex_pattern, app2_data, pattern_bytes2, "app2.bin", app2_path, app2_size):
+                if display_search_results(matches2, hex_pattern, app2_data, pattern_bytes2, "app2.bin", APP2_BIN_PATH, app2_size):
                     found_any = True
             
             if not found_any:
