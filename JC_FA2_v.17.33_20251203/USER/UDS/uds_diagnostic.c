@@ -933,8 +933,7 @@ static void uds_handle_request_transfer_exit(uint8_t* data, uint8_t len, uint8_t
         return;
     }
     
-    *resp_len = 0;
-    UDS_I("Transfer exit accepted");
+    uds_send_response(0, data[0], NULL, 0);    *resp_len = 0;    UDS_I("Transfer exit accepted");
 }
 
 /* ==================== UDS �����շַ� ==================== */
