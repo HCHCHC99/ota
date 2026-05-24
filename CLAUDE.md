@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Self-locking electric actuator (自锁推杆) firmware for the **HDSC HC32F460JETA** (ARM Cortex-M4, 128MHz MPLL). The firmware controls a motorized linear actuator with CAN bus vehicle integration, UDS firmware download, Modbus diagnostics, and sensorless FOC motor control.
 
-The actual firmware source tree is in the `JC_FA2_v.17.32_20251203/` subdirectory — all paths below are relative to that.
+The actual firmware source tree is in the `JC_FA2_v.17.33_20251203/` subdirectory — all paths below are relative to that.
 
 ## Build System
 
@@ -17,7 +17,7 @@ The actual firmware source tree is in the `JC_FA2_v.17.32_20251203/` subdirector
 
 ## File Encoding
 
-All source files use **GBK/GB2312 encoding** with Chinese comments. When editing, match the exact bytes; the Edit tool may fail on Chinese character sequences. Use `sed` or Bash-based replacement as a fallback.
+All source files use **GBK/GB2312 encoding** with Chinese comments. When editing, the Edit tool may fail on Chinese character sequences — use `sed` or Bash-based replacement as a fallback. Never convert files to UTF-8 unless explicitly asked.
 
 ## Architecture
 
@@ -45,9 +45,9 @@ USER/
 - **Motor control loop**: `USER/MotorControl/mc_app.c` orchestrates FOC via `mc_cur.c` / `mc_spd.c` / `mc_pos.c` / `mc_hall.c`
 - **System state machine**: `USER/system/sys_main_state.c` — `SystemContext` struct (`g_sys_ctx`) cycles through `SYS_STATE_INIT → POWER_SAMPLE → HALL_SAMPLE → MOTOR_CMD → MOTOR_PROTECT → POWER_SAMPLE`; faults trigger two-tier protection (primary delay then secondary reset after 10 consecutive faults)
 - **Device registry**: `USER/system/device_manager.c` — register-based abstraction for PWM, Flash, Timer devices
-- **CAN vehicle messages**: `USER/system/canJ1939.c` — receives CAN motor commands (up/down/stop/goto/reset/clrfault)
+- **CAN vehicle messages**: `USER/system/canJ1939.c` — receives CAN motor commands (up/down/stop/goto/reset/clrfault); CAN adapter layer in `USER/adapter/can_adapter.c/h` wraps DDL CAN APIs with ring-buffer RX/TX
 - **Modbus slave**: `USER/msg/msgHandler.c` + `USER/msg/modbus.c` — UART Modbus RTU register access
-- **UDS firmware download**: `USER/UDS/uds_diagnostic.c` (ISO 14229 services) → `USER/UDS/isotp_transport.c` (ISO 15765-2 transport over CAN) → `USER/UDS/uds_dl_bridge.c` (bridge) → `USER/UDS/flash_download.c` (flash erase/write/verify)
+- **UDS firmware download**: See UDS stack section below
 
 ### Key Hardware Configuration (mc_config.h)
 
@@ -81,23 +81,75 @@ USER/
 TBOX request (ECU receives):  0x18DA03F1
 ECU response (ECU transmits): 0x18DAF103
 Functional/broadcast:         0x18DBFFF0
-ISOTP filter list:            {0x18DA03F1, 0x18DAF103, 0x18FF8118}
+ISOTP filter list:            {0x18DA03F1, 0x18DAF103, 0x18FF8118, 0x18DBFFF0}
 ```
 
-### UDS Download Flow (known issue)
+## UDS Diagnostic Stack
 
-The `ISOTP_AUTO_FC` block in `isotp_transport.c` intercepts 0x36 TransferData first frames and sends both FC + ACK (positive response) **immediately upon receiving the first frame**, before any data is received or validated. This bypasses the normal ISOTP reassembly path and the CRC32 verification in `flash_download.c`. The UDS response CAN ID `UDS_PHYSICAL_RESPONSE_ID` was also set to a placeholder `0x12345678` instead of the correct `0x18DAF103`.
+The UDS stack implements ISO 14229 (diagnostics) over ISO 15765-2 (transport) for firmware-over-CAN. Architecture follows a bridge pattern:
 
-### Logging
+```
+CAN ISR (system.c)
+  → isotp_receive_frame()                    [ISO 15765-2 frame reassembly]
+  → g_uds_rx_buffer + g_uds_rx_pending=1     [global async buffer]
+Main Loop (main.c)
+  → uds_receive_handler()                    [SID dispatch]
+    → uds_dl_if (function pointer table)     [abstract download interface]
+      → uds_dl_bridge                        [type conversion layer]
+        → FlashDownload_On*()                [actual flash engine]
+Response path: uds_send_response() → isotp_send_message() → CAN TX
+```
 
-- Debug output via SEGGER RTT (`RTT/rtt_log.h` — macros `LOG_CH`, `LOG_LEVEL_DEBUG`, etc.) over J-Link
-- OTA frame logs in firmware root: `ota data.txt`, `ota data3.txt` (formatted as `seq=N, [RX/TX] CAN_ID, hex_bytes`)
-- USART1 debug output: voltage/current telemetry every 2s (when `hz_usart1_debug` enabled)
+### UDS Files (USER/UDS/)
 
-### Python Tools (in firmware root)
+| File | Role |
+|---|---|
+| `uds_diagnostic.c/h` | Core UDS: SID dispatch (0x10/0x11/0x22/0x27/0x2E/0x31/0x34/0x36/0x37/0x3E), session/security state machine |
+| `isotp_transport.c/h` | ISO 15765-2: SF/FF/CF/FC frame handling, 8KB RX buffer, CAN ID filter recording, OTA frame logging |
+| `flash_download.c/h` | Flash engine: 60KB RAM staging buffer, deferred erase+write at 0x37 TransferExit, CRC32 verify |
+| `uds_dl_bridge.c` | Bridges UDS `uds_dl_if_t` interface to `FlashDownload_*()` implementation |
+| `uds_dl_if.h` | Abstract download interface (function pointer table) — decouples UDS from flash implementation |
+| `security_access.c/h` | Security Access (0x27): CRC8 chain seed-to-key algorithm for Level 1 unlock |
+| `uds_did_rid.h` | DID/RID constants: 0xF000=FirmwareVer, 0xFF00=EraseFirmware, 0xFE00=CalcCRC |
 
-- `readbin.py` — Interactive binary file viewer: hex dump with ASCII preview, string/hex pattern search with context display
-- `security.py` — UDS Security Access (0x27) seed-to-key calculator: CRC8-based algorithm, takes 4-byte seed → outputs 4-byte key for Level 1 unlock
+### UDS Download Flow
+
+1. **0x34 RequestDownload**: Validates address/size, sets `target_address` and `total_size`, state → `FW_UPDATE_READY`
+2. **0x36 TransferData**: Appends data blocks to RAM buffer (`g_fw_ram_buffer[60KB]`), checks sequence number, computes running CRC32
+3. **0x37 TransferExit**: Validates total received == expected, state → `FW_UPDATE_VERIFYING`, sets `pending_response = true`
+4. **FlashDownload_Task()** (called from main loop): Erases target sectors → writes RAM buffer to Flash → verifies each word → state → `FW_UPDATE_COMPLETE`
+5. After completion, `pending_response = false` — UDS layer sends positive response to 0x37
+
+**Critical: `FW_FLASH_WRITE_ENABLED` is set to `0` in `flash_download.h`** — the erase/write/verify steps are compiled out. The stack logs everything but does not physically write Flash. Set to `1` to enable actual programming.
+
+### Async Receive Pattern (CAN ISR → Main Loop)
+
+Declared in `system.c:3771-3774` / `system.h:300-303`:
+```c
+volatile uint8_t g_uds_rx_pending;  // ISR sets to 1, main loop clears to 0
+uint8_t g_uds_rx_buffer[8192];
+uint16_t g_uds_rx_len;
+uint32_t g_uds_rx_can_id;
+```
+
+`CAN_RxIrqCallBack()` (registered at `main.c:1015`) calls `isotp_receive_frame()` in ISR context. When a complete ISOTP message is reassembled, it copies to `g_uds_rx_buffer` and sets `g_uds_rx_pending = 1`. The main loop polls this flag and calls `uds_receive_handler()`.
+
+### ISOTP_AUTO_FC → Disabled
+
+The `ISOTP_AUTO_FC` block is now **disabled** (`isotp_transport.h:53` — commented out with `// #define ISOTP_AUTO_FC`). All frames go through the normal ISO-TP reassembly path.
+
+## Python Tools (in firmware root)
+
+| Tool | Purpose |
+|---|---|
+| `receive_bin.py` | Extract firmware binary from OTA log (`ota data4.txt`): parses PRINTF_BIN hex dumps or ISO-TP TransferData frames, outputs `extracted_firmware.txt` |
+| `compare_bin.py` | Bit error rate analysis: compares `extracted_firmware.txt` against a reference `.bin`, reports bit/byte error rates, prints diff locations |
+| `readbin.py` | Interactive binary viewer: hex dump with ASCII preview, string/hex pattern search with context display |
+| `security.py` | UDS Security Access (0x27) seed-to-key calculator: CRC8-based algorithm, 4-byte seed → 4-byte key for Level 1 unlock |
+
+## Root-Level File
+
+`isotp_lf3.c` in the repo root (not in the firmware subdirectory) is an independent ISO 15765-2 implementation variant. It is **not** part of the main firmware build.
 
 ## Important Code Patterns
 
@@ -106,3 +158,10 @@ The `ISOTP_AUTO_FC` block in `isotp_transport.c` intercepts 0x36 TransferData fi
 - **System config struct**: `SYSTEM_CONFIG_t` in `USER/system/system.h` — gear ratio, lead, stroke, speeds, limits
 - **Fault flags**: bitmask in `system.h` (M1/M2 overcurrent, hall, undervoltage, overvoltage, overtemperature, position)
 - **Compile-time protocol selection**: Source conditionally compiles Modbus vs CAN paths via `#if (PROTOCOL_TYPE == MODBUS_PROTOCOL)` / `#elif (PROTOCOL_TYPE == CAN_PROTOCOL)`
+- **Interface decoupling**: `uds_dl_if.h` defines a function pointer table; `uds_dl_bridge.c` registers the flash download implementation. UDS layer never directly calls FlashDownload functions — enables swapping implementations without touching protocol code.
+
+### Logging
+
+- Debug output via SEGGER RTT (`RTT/rtt_log.h` — macros `LOG_CH`, `LOG_LEVEL_DEBUG`, etc.) over J-Link
+- OTA frame logs in firmware root: `ota data.txt`, `ota data3.txt`, `ota data4.txt` (formatted as `seq=N, [RX/TX] CAN_ID, hex_bytes`)
+- USART1 debug output: voltage/current telemetry every 2s (when `hz_usart1_debug` enabled)
