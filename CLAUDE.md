@@ -140,11 +140,15 @@ The `ISOTP_AUTO_FC` block is now **disabled** (`isotp_transport.h:53` — commen
 
 ## Python Tools (in firmware root)
 
+All scripts read paths from variables at the top of each file — edit the `# ========== 路径配置 ==========` section to change input/output files. `app1.bin` and `app2.bin` are read from the same directory by default.
+
 | Tool | Purpose |
 |---|---|
-| `receive_bin.py` | Extract firmware binary from OTA log (`ota data4.txt`): parses PRINTF_BIN hex dumps or ISO-TP TransferData frames, outputs `extracted_firmware.txt` |
-| `compare_bin.py` | Bit error rate analysis: compares `extracted_firmware.txt` against a reference `.bin`, reports bit/byte error rates, prints diff locations |
-| `readbin.py` | Interactive binary viewer: hex dump with ASCII preview, string/hex pattern search with context display |
+| `extract_fw.py` | Extract firmware binary from OTA log (`ota data4.txt`): parses PRINTF_BIN hex dumps or ISO-TP TransferData frames, outputs `extracted_firmware.txt` |
+| `compare_rec.py` | Bit error rate analysis: compares `extracted_firmware.txt` against `app1.bin` (or `app2.bin` via `REF_BIN`), reports bit/byte error rates, prints diff locations in `XX[YY]` format |
+| `compare_tbox.py` | Parse PCAN-View `.trc` trace, reassemble ISO-TP frames from TBOX CAN data, compare against `app1.bin`/`app2.bin` |
+| `hexdump.py` | Convert `app1.bin` and `app2.bin` to aligned hex dump `.txt` files (16 bytes/row, 8+8 grouping) |
+| `bin_search.py` | Interactive binary viewer: hex dump with ASCII preview, string/hex pattern search with context display |
 | `security.py` | UDS Security Access (0x27) seed-to-key calculator: CRC8-based algorithm, 4-byte seed → 4-byte key for Level 1 unlock |
 
 ## Root-Level File

@@ -1,16 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-compare_bin.py - 对比 extracted_firmware.txt 和 app1.bin，检测误码率
+compare_rec.py — 对比 extracted_firmware.txt 和 app1.bin / app2.bin，检测误码率
 """
 
 import os
 import re
 import sys
 
+# ========== 路径配置（在此修改）==========
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 EXTRACTED_FILE = os.path.join(SCRIPT_DIR, "extracted_firmware.txt")
-APP1_BIN_PATH = r"F:\Enterprise WeChat\WXWork\1688858205719851\Cache\File\2026-04\app1.bin"
+APP1_BIN_PATH = os.path.join(SCRIPT_DIR, "app1.bin")
+APP2_BIN_PATH = os.path.join(SCRIPT_DIR, "app2.bin")
+# 选择对比哪个参考固件: "app1" 或 "app2"
+REF_BIN = "app1"
+# =========================================
 
 def safe_input(prompt=""):
     """安全 input，非交互模式下不报错"""
@@ -155,10 +160,72 @@ def print_hex_diff(extracted, reference, ref_offset):
         print(f"\n  --- 共 {diff_count} 处差异 ---")
 
 
+def analyze_error_patterns(extracted, reference, ref_offset):
+    """分析误码规律：逐bit统计 + 全部字节映射"""
+    compare_len = min(len(extracted), len(reference) - ref_offset)
+
+    bit_stats = {}
+    for b in range(8):
+        bit_stats[b] = {"0→1": 0, "1→0": 0, "total": 0}
+
+    byte_map = {}
+
+    for i in range(compare_len):
+        eb = extracted[i]
+        rb = reference[ref_offset + i]
+        if eb != rb:
+            key = (eb, rb)
+            byte_map[key] = byte_map.get(key, 0) + 1
+            for b in range(8):
+                e_bit = (eb >> b) & 1
+                r_bit = (rb >> b) & 1
+                if e_bit != r_bit:
+                    bit_stats[b]["total"] += 1
+                    if e_bit == 0 and r_bit == 1:
+                        bit_stats[b]["0→1"] += 1
+                    else:
+                        bit_stats[b]["1→0"] += 1
+
+    # ── 逐 bit 误码统计 ──
+    print("\n" + "=" * 62)
+    print("  逐 Bit 误码统计 (提取 → 参考)")
+    print("=" * 62)
+    print(f"  {'Bit':<6} {'0→1':>8} {'1→0':>8} {'总误码':>8} {'占比':>8}")
+    print("-" * 42)
+    total_bit_errors = sum(bit_stats[b]["total"] for b in range(8))
+    for b in range(8):
+        t = bit_stats[b]["total"]
+        pct = f"{t / total_bit_errors * 100:.1f}%" if total_bit_errors > 0 else "0%"
+        print(f"  Bit{b:<3} {bit_stats[b]['0→1']:>8} {bit_stats[b]['1→0']:>8} {t:>8} {pct:>8}")
+
+    # ── 全部字节映射 ──
+    print("\n" + "=" * 62)
+    print("  全部字节映射 (提取 → 参考)  出现次数 / 占比")
+    print("=" * 62)
+    sorted_patterns = sorted(byte_map.items(), key=lambda x: x[1], reverse=True)
+    total_byte_errors = sum(v for _, v in sorted_patterns)
+
+    for (eb, rb), count in sorted_patterns:
+        pct = count / total_byte_errors * 100
+        bar = "█" * max(1, int(pct / 2))
+        print(f"  {eb:02X} → {rb:02X}    {count:>5}  ({pct:5.1f}%)  {bar}")
+
+    print()
+
+
 def main():
+    # 选择参考固件
+    if REF_BIN == "app2":
+        ref_path = APP2_BIN_PATH
+        ref_name = "app2.bin"
+    else:
+        ref_path = APP1_BIN_PATH
+        ref_name = "app1.bin"
+
     print("=" * 62)
-    print("  误码率检测工具 - compare_bin.py")
+    print("  误码率检测工具 - compare_rec.py")
     print("=" * 62)
+    print(f"  参考固件: {ref_name}")
     print()
 
     # 1. 加载 extracted_firmware.txt
@@ -171,17 +238,17 @@ def main():
     print(f"      大小: {len(extracted)} bytes ({len(extracted)/1024:.2f} KB)")
     print()
 
-    # 2. 加载 app1.bin
+    # 2. 加载参考固件
     print("[INFO] 加载参考固件...")
-    reference = read_bin(APP1_BIN_PATH)
+    reference = read_bin(ref_path)
     if reference is None:
         safe_input("\n按 Enter 键退出...")
         return
-    print(f"      文件: {APP1_BIN_PATH}")
+    print(f"      文件: {ref_path}")
     print(f"      大小: {len(reference)} bytes ({len(reference)/1024:.2f} KB)")
     print()
 
-    # 3. 自动搜索最佳对齐偏移 (在整个 app1.bin 中搜索)
+    # 3. 自动搜索最佳对齐偏移
     print(f"[INFO] UDS 下载目标地址: 0x{TARGET_FLASH_ADDR:08X}")
     print(f"[INFO] 提取数据大小:     {len(extracted)} bytes")
     print(f"[INFO] 参考文件大小:     {len(reference)} bytes")
@@ -190,7 +257,7 @@ def main():
     best_offset = find_best_offset(extracted, reference, 0)
     print(f"      最佳偏移: 0x{best_offset:08X} ({best_offset} bytes)")
     if best_offset == 0:
-        print(f"      推测: app1.bin 起始地址 = 0x{TARGET_FLASH_ADDR:08X}")
+        print(f"      推测: {ref_name} 起始地址 = 0x{TARGET_FLASH_ADDR:08X}")
     print()
 
     # 4. 对比误码率
@@ -235,6 +302,7 @@ def main():
     # 7. 打印差异详情
     if result['error_bytes'] > 0:
         print_hex_diff(extracted, reference, best_offset)
+        analyze_error_patterns(extracted, reference, best_offset)
 
     # 8. 打印对比区域的首尾预览
     print("\n" + "=" * 62)

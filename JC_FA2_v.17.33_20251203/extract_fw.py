@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-receive_bin.py - 从 ota data4.txt 提取固件 bin 数据
+extract_fw.py — 从 ota data4.txt 提取固件 bin 数据
 支持两种格式:
   1. PRINTF_BIN hex dump (=== BIN DUMP START === ... === BIN DUMP END ===)
   2. ISO-TP OTA 帧日志中的 TransferData CF/FF 数据
@@ -11,9 +11,19 @@ import re
 import os
 import sys
 
+# ========== 路径配置（在此修改）==========
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 INPUT_FILE = os.path.join(SCRIPT_DIR, "ota data4.txt")
 OUTPUT_FILE = os.path.join(SCRIPT_DIR, "extracted_firmware.txt")
+# =========================================
+
+
+def safe_input(prompt=""):
+    """安全 input，非交互模式下不报错"""
+    try:
+        return input(prompt)
+    except EOFError:
+        return ""
 
 
 def extract_print_bin(lines):
@@ -95,13 +105,13 @@ def extract_ota_frames(lines):
 
 def main():
     print("=" * 60)
-    print("  Firmware Binary Extractor - receive_bin.py")
+    print("  Firmware Binary Extractor - extract_fw.py")
     print("=" * 60)
     print()
 
     if not os.path.exists(INPUT_FILE):
         print(f"[ERROR] 文件不存在: {INPUT_FILE}")
-        input("\n按 Enter 键退出...")
+        safe_input("\n按 Enter 键退出...")
         return
 
     print(f"[INFO] 读取: {INPUT_FILE}")
@@ -125,7 +135,7 @@ def main():
     if len(bin_data) == 0:
         print("[WARN] 未提取到任何 bin 数据！")
         print("[INFO] 请确认日志中包含 TransferData RX 帧或 BIN DUMP 标记")
-        input("\n按 Enter 键退出...")
+        safe_input("\n按 Enter 键退出...")
         return
 
     # 写入格式化的 hex 文本文件 (参照 readbin.py 格式)
@@ -167,7 +177,7 @@ def main():
     print(f"  提取完成! 数据已保存到: {OUTPUT_FILE}")
     print("=" * 60)
 
-    input("\n按 Enter 键退出...")
+    safe_input("\n按 Enter 键退出...")
 
 
 if __name__ == "__main__":

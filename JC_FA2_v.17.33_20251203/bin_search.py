@@ -1,13 +1,20 @@
 import os
 import binascii
 
-# ========== 配置区域 - 请在这里修改文件路径 ==========
-# app1.bin 文件路径（请修改为实际路径）
-APP1_BIN_PATH = r"F:\Enterprise WeChat\WXWork\1688858205719851\Cache\File\2026-04\app1.bin"
+# ========== 路径配置（在此修改）==========
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+APP1_BIN_PATH = os.path.join(SCRIPT_DIR, "app1.bin")
+APP2_BIN_PATH = os.path.join(SCRIPT_DIR, "app2.bin")
+# =========================================
 
-# app2.bin 文件路径（请修改为实际路径）
-APP2_BIN_PATH = r"F:\Enterprise WeChat\WXWork\1688858205719851\Cache\File\2026-04\app2.bin"
-# =================================================
+
+def safe_input(prompt=""):
+    """安全 input，非交互模式下不报错"""
+    try:
+        return input(prompt)
+    except EOFError:
+        return ""
+
 
 def read_bin_to_formatted_hex(file_path, bytes_per_line=16):
     """读取二进制文件并返回格式化的十六进制显示"""
@@ -188,7 +195,7 @@ def display_search_results(matches, keyword, data, keyword_bytes, file_name, fil
         
         # 询问是否打印周围10行
         print()
-        print_choice = input(f"是否打印此匹配项周围的上下10行？(y/n，默认n): ").strip().lower()
+        print_choice = safe_input(f"是否打印此匹配项周围的上下10行？(y/n，默认n): ").strip().lower()
         if print_choice == 'y':
             print_surrounding_lines(data, offset, len(keyword_bytes), file_name, file_size, 10)
         
@@ -329,7 +336,7 @@ def main():
     if not app1_exists and not app2_exists:
         print("\n错误：没有找到任何有效的文件！")
         print("请修改脚本开头的 APP1_BIN_PATH 和 APP2_BIN_PATH 变量")
-        input("\n按 Enter 键退出...")
+        safe_input("\n按 Enter 键退出...")
         return
     
     # 加载两个文件
@@ -339,11 +346,11 @@ def main():
     # 检查是否有文件成功加载
     if app1_data is None and app2_data is None:
         print("\n错误：没有找到任何有效的文件！")
-        input("\n按 Enter 键退出...")
+        safe_input("\n按 Enter 键退出...")
         return
     
     # 询问是否显示文件内容
-    show_content = input("\n是否显示文件内容？(y/n，默认n): ").strip().lower()
+    show_content = safe_input("\n是否显示文件内容？(y/n，默认n): ").strip().lower()
     if show_content == 'y':
         if app1_data:
             display_file_content(app1_data, "app1.bin", 30)
@@ -360,7 +367,7 @@ def main():
         print("3. 显示文件首尾10行")
         print("4. 退出程序")
         
-        choice = input("\n请选择 (1/2/3/4): ").strip()
+        choice = safe_input("\n请选择 (1/2/3/4): ").strip()
         
         if choice == '4':
             break
@@ -376,7 +383,7 @@ def main():
             print("2. app2.bin")
             print("3. 同时显示两个文件")
             
-            file_choice = input("\n请选择 (1/2/3): ").strip()
+            file_choice = safe_input("\n请选择 (1/2/3): ").strip()
             
             if file_choice == '1':
                 if app1_data:
@@ -405,7 +412,7 @@ def main():
                 print("无效选择")
         
         elif choice == '1':
-            keyword = input("\n请输入要搜索的字符串（可包含空格）: ")
+            keyword = safe_input("\n请输入要搜索的字符串（可包含空格）: ")
             if not keyword:
                 print("输入不能为空！")
                 continue
@@ -430,12 +437,12 @@ def main():
                 print(f"\n未在 app1.bin 和 app2.bin 中找到关键词: \"{keyword}\"")
             
             # 询问是否继续搜索
-            cont = input("\n是否继续搜索？(y/n，默认y): ").strip().lower()
+            cont = safe_input("\n是否继续搜索？(y/n，默认y): ").strip().lower()
             if cont == 'n':
                 break
         
         elif choice == '2':
-            hex_pattern = input("\n请输入要搜索的十六进制（例如：55 AA FF 或 55AAFF）: ")
+            hex_pattern = safe_input("\n请输入要搜索的十六进制（例如：55 AA FF 或 55AAFF）: ")
             if not hex_pattern:
                 print("输入不能为空！")
                 continue
@@ -460,7 +467,7 @@ def main():
                 print(f"\n未在 app1.bin 和 app2.bin 中找到十六进制: {hex_pattern}")
             
             # 询问是否继续搜索
-            cont = input("\n是否继续搜索？(y/n，默认y): ").strip().lower()
+            cont = safe_input("\n是否继续搜索？(y/n，默认y): ").strip().lower()
             if cont == 'n':
                 break
         
@@ -469,7 +476,7 @@ def main():
     
     # 保持窗口打开
     print("\n感谢使用！")
-    input("\n按 Enter 键退出...")
+    safe_input("\n按 Enter 键退出...")
 
 if __name__ == "__main__":
     main()
