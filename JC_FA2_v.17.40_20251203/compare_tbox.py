@@ -16,7 +16,7 @@ APP1_BIN_PATH = os.path.join(SCRIPT_DIR, "app1.bin")
 APP2_BIN_PATH = os.path.join(SCRIPT_DIR, "app2.bin")
 OUTPUT_FILE = os.path.join(SCRIPT_DIR, "tbox_extracted_firmware.txt")
 # 选择对比哪个参考固件: "app1" 或 "app2"
-REF_BIN = "app1"
+REF_BIN = "app2"
 # =========================================
 
 # ========== CAN / ISO-TP 常量 ==========

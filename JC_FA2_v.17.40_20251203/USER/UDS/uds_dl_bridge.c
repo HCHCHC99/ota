@@ -1,27 +1,27 @@
-/********************************ï¿½Ä¼ï¿½Ëµï¿½ï¿½*************************************
-*ï¿½Ä¼ï¿½ï¿½ï¿½: uds_dl_bridge.c
-*ï¿½ï¿½ï¿½ï¿½: AI Assistant
-*ï¿½·Ú: V1.0.0
-*ï¿½ï¿½ï¿½Ü¼ï¿½ï¿½: UDS ï¿½ï¿½ï¿½Ø³ï¿½ï¿½ï¿½Ó¿Ú²ï¿½Êµï¿½Ö£ï¿½ï¿½Å½Ó²ã£©
-*Ëµï¿½ï¿½: ï¿½Å½ï¿½ UDS Ð­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½Ö£ï¿½ï¿½ï¿½Ç°Îªï¿½Ì¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-*      Í¨ï¿½ï¿½×¢ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½Ö¶ï¿½Ì¬ï¿½ï¿½UDSï¿½ã²»Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½
+/*******************************************
+* ÎÄ¼þÃû: uds_dl_bridge.c
+* ×÷Õß: AI Assistant
+* °æ±¾: V1.0.0
+* ¹¦ÄÜ¼ò½é: UDS ÏÂÔØ³éÏó½Ó¿Ú²ãÊµÏÖ£¨ÇÅ½Ó²ã£©
+* ËµÃ÷: ÇÅ½Ó UDS Ð­Òé²ãÓë¾ßÌåÏÂÔØÊµÏÖ£¨µ±Ç°Îª¹Ì¼þÉý¼¶£©
+*      Í¨¹ý×¢²á»úÖÆÊµÏÖ¶àÌ¬£¬UDS²ã²»Ö±½ÓÒÀÀµ¾ßÌåÊµÏÖ
 *****************************************************************************/
 #include "uds_dl_if.h"
 #include "flash_download.h"
 #include "rtt_log.h"
 #include <string.h>
 
-/*****************************ï¿½ï¿½ï¿½Ôºê¶¨ï¿½ï¿½***************************************/
+/*****************************µ÷ÊÔºê¶¨Òå***************************************/
 #define DL_D(fmt, ...)  LOG_CH(LOG_CH_MAIN, LOG_LEVEL_DEBUG, COLOR_CYAN,   "DL", fmt, ##__VA_ARGS__)
 #define DL_I(fmt, ...)  LOG_CH(LOG_CH_MAIN, LOG_LEVEL_INFO,  COLOR_GREEN, "DL", fmt, ##__VA_ARGS__)
 #define DL_W(fmt, ...)  LOG_CH(LOG_CH_MAIN, LOG_LEVEL_WARN,  COLOR_YELLOW,"DL", fmt, ##__VA_ARGS__)
 #define DL_E(fmt, ...)  LOG_CH(LOG_CH_MAIN, LOG_LEVEL_ERROR, COLOR_RED,   "DL", fmt, ##__VA_ARGS__)
 
-/*****************************Ë½ï¿½Ð±ï¿½ï¿½ï¿½***************************************/
+/*****************************Ë½ÓÐ±äÁ¿***************************************/
 static const uds_dl_if_t* g_dl_iface = NULL;
 
-/*****************************ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½************************************/
-/* ï¿½ï¿½ FlashDownloadResult_t ×ªï¿½ï¿½Îª uds_dl_result_t */
+/*****************************½á¹ûÂë×ª»»±í************************************/
+/* ½« FlashDownloadResult_t ×ª»»Îª uds_dl_result_t */
 static uds_dl_result_t dl_convert_fw_result(FlashDownloadResult_t fw_result)
 {
     switch (fw_result)
@@ -39,7 +39,7 @@ static uds_dl_result_t dl_convert_fw_result(FlashDownloadResult_t fw_result)
     }
 }
 
-/* ï¿½ï¿½ FlashDownloadState_t ×ªï¿½ï¿½Îª uds_dl_state_t */
+/* ½« FlashDownloadState_t ×ª»»Îª uds_dl_state_t */
 static uds_dl_state_t dl_convert_fw_state(FlashDownloadState_t fw_state)
 {
     switch (fw_state)
@@ -54,7 +54,7 @@ static uds_dl_state_t dl_convert_fw_state(FlashDownloadState_t fw_state)
     }
 }
 
-/*****************************ï¿½Ì¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½Êµï¿½ï¿½********************************/
+/*****************************¹Ì¼þÉý¼¶½Ó¿ÚÊµÏÖ********************************/
 
 static uds_dl_result_t dl_fw_init(void* config_data, uint16_t config_len)
 {
@@ -74,7 +74,7 @@ static uds_dl_result_t dl_fw_on_transfer_data(uint8_t block_sequence_number,
                                                 const uint8_t* data,
                                                 uint16_t len)
 {
-    /* flash_download.h ï¿½Ó¿ï¿½ï¿½ï¿½Òªï¿½ï¿½ const Ö¸ï¿½ë£¬ï¿½ï¿½Ç¿ï¿½ï¿½×ªï¿½ï¿½ */
+    /* flash_download.h ½Ó¿ÚÐèÒª·Ç const Ö¸Õë£¬×öÇ¿ÖÆ×ª»» */
     return dl_convert_fw_result(
         FlashDownload_OnTransferData(block_sequence_number,
                                       (uint8_t*)data,
@@ -165,7 +165,7 @@ static bool dl_fw_read_did(uint16_t did, uint32_t* value)
     }
 }
 
-/*****************************ï¿½Ì¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿Ú±ï¿½Êµï¿½ï¿½******************************/
+/*****************************¹Ì¼þÉý¼¶½Ó¿Ú±íÊµÀý******************************/
 static const uds_dl_if_t g_firmware_download_iface = {
     .init                = dl_fw_init,
     .on_request_download = dl_fw_on_request_download,
@@ -183,7 +183,7 @@ static const uds_dl_if_t g_firmware_download_iface = {
     .read_did            = dl_fw_read_did,
 };
 
-/*****************************È«ï¿½Ö½Ó¿ï¿½Êµï¿½ï¿½************************************/
+/*****************************È«¾Ö½Ó¿ÚÊµÏÖ************************************/
 
 void uds_dl_register(const uds_dl_if_t* iface)
 {
@@ -205,8 +205,8 @@ bool uds_dl_is_registered(void)
 }
 
 /**
- * @brief ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø½Ó¿Ú£ï¿½ï¿½ï¿½ÏµÍ³ï¿½ï¿½Ê¼ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ã£ï¿½
- * @note ×¢ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½Ó¿Ú²ï¿½
+ * @brief ³õÊ¼»¯¹Ì¼þÉý¼¶ÏÂÔØ½Ó¿Ú£¨¹©ÏµÍ³³õÊ¼»¯Ê±µ÷ÓÃ£©
+ * @note ×¢²á¹Ì¼þÉý¼¶ÊµÏÖµ½³éÏó½Ó¿Ú²ã
  */
 void uds_dl_init_fw(void)
 {
